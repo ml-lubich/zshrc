@@ -1,0 +1,38 @@
+# Backup files
+*.backup
+*.bak
+*.pre-*-backup
+.zshrc.pre-*-backup
+
+# OS files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Editor files
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Temporary files
+*.tmp
+*.log
+*.cache
+
+# Test files
+test-*
+tmp/
+
+# Personal notes
+NOTES.md
+TODO.md
+*.md.bak
+

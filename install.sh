@@ -73,16 +73,66 @@ ensure_brew_in_path() {
     eval "$("$HOME/.linuxbrew/bin/brew" shellenv)"
   fi
 
-  if ! command -v brew >/div/null 2>&1; then
+  if ! command -v brew >/dev/null 2>&1; then
     err "Homebrew appears to be installed but is not in PATH. Please add it manually and re-run."
     exit 1
   fi
 }
 
 install_python_latest() {
+  if command -v python3 >/dev/null 2>&1 && python3 --version | grep -q "Python 3\.[0-9]"; then
+    log "Python already installed: $(python3 --version)"
+    return 0
+  fi
   log "Installing latest Python via Homebrew..."
   brew install python || {
     err "Failed to install Python via Homebrew."
+    exit 1
+  }
+}
+
+install_dev_tools() {
+  log "Installing development tools via Homebrew..."
+  
+  local tools=(
+    "fzf"
+    "autojump"
+    "eza"
+    "bat"
+    "thefuck"
+    "lazygit"
+    "zsh-autosuggestions"
+    "zsh-syntax-highlighting"
+  )
+  
+  for tool in "${tools[@]}"; do
+    if brew list "$tool" >/dev/null 2>&1; then
+      log "$tool already installed."
+    else
+      log "Installing $tool..."
+      brew install "$tool" || {
+        err "Failed to install $tool"
+        exit 1
+      }
+    fi
+  done
+  
+  # Install fzf key bindings
+  if [ -f "$(brew --prefix)/opt/fzf/install" ]; then
+    log "Setting up fzf key bindings..."
+    "$(brew --prefix)/opt/fzf/install" --key-bindings --completion --no-update-rc || true
+  fi
+}
+
+install_nvm() {
+  if [ -d "${HOME}/.nvm" ]; then
+    log "NVM already installed."
+    return 0
+  fi
+  
+  log "Installing NVM (Node Version Manager)..."
+  curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash || {
+    err "Failed to install NVM."
     exit 1
   }
 }
@@ -254,17 +304,20 @@ main() {
     install_homebrew_macos
     ensure_brew_in_path
     install_python_latest
+    install_dev_tools
     install_meslo_fonts_macos
   else
     install_zsh_and_git_linux
     install_homebrew_linux
     ensure_brew_in_path
     install_python_latest
+    install_dev_tools
     install_meslo_fonts_linux
   fi
 
   install_oh_my_zsh
   install_powerlevel10k
+  install_nvm
   configure_zshrc
   configure_p10k_config
   set_default_shell_to_zsh
@@ -272,19 +325,49 @@ main() {
   cat <<'EOF'
 
 =====================================================
-Bootstrap complete.
+✅ Bootstrap complete!
 
-Next steps:
-  1. Close this terminal and open a NEW one.
-  2. Ensure your terminal profile is using a "MesloLGS NF" font.
-  3. If prompted by Powerlevel10k, run `p10k configure` to fine-tune your prompt.
+📋 Next steps:
+  1. Close this terminal and open a NEW one (or run: source ~/.zshrc)
+  2. Configure your terminal/editor to use "MesloLGS NF" font:
+     - Terminal: Preferences → Profiles → Text → Font → MesloLGS NF
+     - VS Code: Settings → Terminal Font → "MesloLGS NF"
+     - iTerm2: Preferences → Profiles → Text → Font → MesloLGS NF
+  3. Your Powerlevel10k config is already installed from this repo.
+     If you want to reconfigure, run: p10k configure
 
-If something looks off, restore your previous Zsh config from:
+🔧 Installed tools:
+  - Homebrew (package manager)
+  - Python (latest)
+  - Oh My Zsh (zsh framework)
+  - Powerlevel10k (prompt theme)
+  - MesloLGS NF fonts (required for icons)
+  - fzf (fuzzy finder)
+  - autojump (smart directory navigation)
+  - eza (better ls)
+  - bat (better cat)
+  - thefuck (typo corrector - type 'fuck' or 'f' after a typo)
+  - lazygit (git TUI)
+  - zsh-autosuggestions (auto-complete)
+  - zsh-syntax-highlighting (syntax highlighting)
+  - NVM (Node Version Manager)
+
+💡 Custom commands:
+  - mygit [project] - Navigate to ~/Desktop/git/[project]
+  - mygit -n [project] - Create new project and open in VS Code
+  - f / fuck - Fix last command typo
+  - lg - Open lazygit
+  - ls / ll / tree - Use eza instead of ls
+
+🔄 If something looks off, restore your previous config from:
   ~/.zshrc.pre-mlubich-backup
+
+📖 See README.md for detailed setup instructions.
 =====================================================
 EOF
 }
 
 main "$@"
+
 
 
