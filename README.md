@@ -473,7 +473,7 @@ This repository includes comprehensive tests. To run them:
 
 ```bash
 # Install test dependencies
-pip install -r requirements-test.txt
+pip install -r requirements.txt
 
 # Run tests
 pytest
@@ -499,8 +499,7 @@ zshrc/
 ├── p10k.zsh            # Powerlevel10k theme configuration
 ├── README.md           # This file
 ├── .gitignore          # Git ignore rules
-├── requirements.txt    # Python dependencies
-├── requirements-test.txt  # Test dependencies
+├── requirements.txt    # Python dependencies (includes test dependencies)
 ├── pytest.ini          # Pytest configuration
 └── docs/               # Documentation
     ├── architecture.md
