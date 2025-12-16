@@ -3,6 +3,7 @@
 *.bak
 *.pre-*-backup
 .zshrc.pre-*-backup
+.p10k.zsh.pre-*-backup
 
 # OS files
 .DS_Store
@@ -27,9 +28,23 @@ Thumbs.db
 *.log
 *.cache
 
-# Test files
+# Test files and coverage
 test-*
 tmp/
+.coverage
+htmlcov/
+.pytest_cache/
+.tox/
+*.pyc
+__pycache__/
+.coverage.*
+coverage.xml
+*.cover
+
+# Python virtual environments
+venv/
+env/
+ENV/
 
 # Personal notes
 NOTES.md

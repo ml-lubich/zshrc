@@ -38,17 +38,63 @@ source $ZSH/oh-my-zsh.sh
 # ==============================================================================
 
 # Source zsh-autosuggestions (from Homebrew)
+# Support both Apple Silicon and Intel Macs
 if [ -f /opt/homebrew/opt/zsh-autosuggestions/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]; then
     source /opt/homebrew/opt/zsh-autosuggestions/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+elif [ -f /usr/local/opt/zsh-autosuggestions/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]; then
+    source /usr/local/opt/zsh-autosuggestions/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+elif [ -f "$(brew --prefix)/opt/zsh-autosuggestions/share/zsh-autosuggestions/zsh-autosuggestions.zsh" ]; then
+    source "$(brew --prefix)/opt/zsh-autosuggestions/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
 fi
 
 # Source zsh-syntax-highlighting (from Homebrew) - Must be sourced LAST among plugins
+# Support both Apple Silicon and Intel Macs
 if [ -f /opt/homebrew/opt/zsh-syntax-highlighting/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]; then
     source /opt/homebrew/opt/zsh-syntax-highlighting/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+elif [ -f /usr/local/opt/zsh-syntax-highlighting/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]; then
+    source /usr/local/opt/zsh-syntax-highlighting/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+elif [ -f "$(brew --prefix)/opt/zsh-syntax-highlighting/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ]; then
+    source "$(brew --prefix)/opt/zsh-syntax-highlighting/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 fi
 
 # FZF configuration
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+# Enhanced FZF configuration with ripgrep and fd
+# Use fd (or fdfind on Ubuntu) for file finding
+if command -v fd >/dev/null 2>&1; then
+  export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
+  export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+elif command -v fdfind >/dev/null 2>&1; then
+  export FZF_DEFAULT_COMMAND='fdfind --type f --hidden --follow --exclude .git'
+  export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+fi
+
+# Use ripgrep for content search
+if command -v rg >/dev/null 2>&1; then
+  export FZF_DEFAULT_OPTS='--height 50% --layout=reverse --border --preview "bat --style=numbers --color=always --line-range :500 {}"'
+  
+  # Search for content in files using ripgrep
+  # Usage: Press Ctrl+R to search command history, or type: rg "search term" | fzf
+  export FZF_CTRL_R_OPTS='--preview "echo {}" --preview-window down:3:hidden:wrap --bind "?:toggle-preview"'
+fi
+
+# FZF aliases for common workflows
+# Search file names
+alias ff='fzf --preview "bat --style=numbers --color=always --line-range :500 {}"'
+
+# Search file content with ripgrep + fzf
+# Usage: rgg "search term"
+rgg() {
+  if [ -z "$1" ]; then
+    echo "Usage: rgg <search-term>"
+    return 1
+  fi
+  rg --line-number --no-heading --smart-case "$1" . | \
+    fzf --delimiter : \
+        --preview 'bat --style=numbers --color=always --highlight-line {2} {1} --line-range $(( {2}-30 )):$(( {2}+30 ))' \
+        --preview-window 'up,60%,border-bottom,+{2}+3/3,~3'
+}
 
 # ==============================================================================
 # 4. SETTINGS (History, Vim, Completion)
@@ -94,10 +140,16 @@ alias gcb='git checkout -b'
 alias gpush='git push origin $(git_current_branch)'
 
 # Custom Functions
+# mygit: Generalizable project navigation function
+# Set MYGIT_PROJECTS_DIR to customize the projects directory (default: ~/Desktop/git)
+export MYGIT_PROJECTS_DIR="${MYGIT_PROJECTS_DIR:-$HOME/Desktop/git}"
+export MYGIT_EDITOR="${MYGIT_EDITOR:-code}"
+
 mygit() {
-  # 1. If no arguments, go to root git folder
+  # 1. If no arguments, go to root projects folder
   if [ -z "$1" ]; then
-    cd ~/Desktop/git
+    mkdir -p "$MYGIT_PROJECTS_DIR"
+    cd "$MYGIT_PROJECTS_DIR"
     return
   fi
 
@@ -110,22 +162,26 @@ mygit() {
       return 1
     fi
 
-    local project_path="$HOME/Desktop/git/$1"
+    local project_path="$MYGIT_PROJECTS_DIR/$1"
     echo "🆕 Creating new project: $1"
     mkdir -p "$project_path"
     cd "$project_path"
     echo "🚀 Opening in IDE..."
-    code .
+    $MYGIT_EDITOR . 2>/dev/null || {
+      echo "⚠️  Editor '$MYGIT_EDITOR' not found. Set MYGIT_EDITOR to your preferred editor."
+    }
     return
   fi
 
   # 3. Standard Mode: Open EXISTING project
-  local project_path="$HOME/Desktop/git/$1"
+  local project_path="$MYGIT_PROJECTS_DIR/$1"
   
   if [ -d "$project_path" ]; then
     cd "$project_path"
     echo "🚀 Opening in IDE..."
-    code .
+    $MYGIT_EDITOR . 2>/dev/null || {
+      echo "⚠️  Editor '$MYGIT_EDITOR' not found. Set MYGIT_EDITOR to your preferred editor."
+    }
   else
     echo "❌ Project '$1' not found."
     echo "👉 Did you mean to create it? Use: mygit -n $1"
@@ -133,9 +189,9 @@ mygit() {
 }
 
 # --- Autocomplete Logic ---
-# TAB will autocomplete folder names from inside ~/Desktop/git
+# TAB will autocomplete folder names from inside MYGIT_PROJECTS_DIR
 _mygit() {
-  _files -W ~/Desktop/git -/
+  _files -W "$MYGIT_PROJECTS_DIR" -/
 }
 compdef _mygit mygit
 
@@ -148,15 +204,16 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
 
-# b) JAVA (Zulu 8 Strict Config)
-export JAVA_HOME=/Library/Java/JavaVirtualMachines/zulu-8.jdk/Contents/Home
-# Only add bin to path. We prepend this so it overrides system Java.
-export PATH="$JAVA_HOME/bin:$PATH"
+# b) JAVA (Optional - only if Zulu 8 is installed)
+# Uncomment and adjust path if you have Java installed
+# export JAVA_HOME=/Library/Java/JavaVirtualMachines/zulu-8.jdk/Contents/Home
+# export PATH="$JAVA_HOME/bin:$PATH"
 
 # c) Custom & Third Party Tools
 # Prepend these so they take precedence over system tools
-export PATH="/Users/mlubich/.antigravity/antigravity/bin:$PATH"
-export PATH="/Users/mlubich/.local/bin:$PATH"
+# Add your custom paths here if needed
+# export PATH="$HOME/.antigravity/antigravity/bin:$PATH"
+export PATH="$HOME/.local/bin:$PATH"
 
 # ==============================================================================
 # 7. THEME CONFIGURATION (Must be last)

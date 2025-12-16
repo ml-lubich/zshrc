@@ -12,3 +12,4 @@ Responsibilities are separated as:
 - **Shell configuration layer**: `zshrc` and optional `p10k.zsh` (user-level shell behavior).
 
 
+
