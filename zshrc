@@ -7,8 +7,14 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
-# Set Homebrew path for Apple Silicon
-export PATH="/opt/homebrew/bin:$PATH"
+# Set Homebrew path (supports both Apple Silicon and Intel Macs, plus Linux)
+if [ -d "/opt/homebrew/bin" ]; then
+  export PATH="/opt/homebrew/bin:$PATH"
+elif [ -d "/usr/local/Homebrew/bin" ]; then
+  export PATH="/usr/local/bin:$PATH"
+elif [ -d "$HOME/.linuxbrew/bin" ]; then
+  export PATH="$HOME/.linuxbrew/bin:$PATH"
+fi
 
 # ==============================================================================
 # 2. OH MY ZSH CONFIGURATION

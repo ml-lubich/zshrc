@@ -1,25 +1,28 @@
 # Zsh Configuration with Powerlevel10k
 
-A comprehensive, automated setup script for macOS and Linux that installs and configures a complete development environment with:
+A comprehensive, automated setup script for macOS and Linux that installs and configures a complete development environment with Powerlevel10k, modern development tools, and a beautiful terminal experience.
 
-- **Powerlevel10k** - Beautiful, fast, and highly customizable Zsh prompt
+## ✨ Features
+
+- **Powerlevel10k** - Beautiful, fast, and highly customizable Zsh prompt with instant prompt
 - **Oh My Zsh** - Zsh framework with plugins and themes
 - **MesloLGS NF Fonts** - Required Nerd Fonts for Powerlevel10k icons
-- **Modern Development Tools** - fzf, autojump, eza, bat, thefuck, lazygit
+- **Modern Development Tools** - fzf, autojump, eza, bat, thefuck, lazygit, ripgrep, fd
 - **Zsh Plugins** - Auto-suggestions and syntax highlighting
-- **NVM** - Node Version Manager with Node.js and npm
-- **Python** - Latest stable or specified version via Homebrew
-- **iTerm2** - Terminal emulator for macOS (optional)
-- **Xcode Command Line Tools** - Developer tools for macOS
+- **NVM** - Node Version Manager for multiple Node.js versions
+- **Python** - Latest stable version via Homebrew
+- **iTerm2** - Automatic installation on macOS (optional)
+- **Xcode Command Line Tools** - Automatic installation on macOS
+- **Cross-platform** - Works on macOS and Linux (Ubuntu, RHEL, Fedora, etc.)
 
 ## 🚀 Quick Start
 
 ### Prerequisites
 
-- macOS (Apple Silicon or Intel) or Linux (Ubuntu, Debian, Fedora, RHEL, CentOS)
+- macOS or Linux (Unix-like system)
 - `curl` and `git` installed
 - Internet connection
-- Administrator/sudo access (for some installations)
+- Administrator/sudo access (for package installation)
 
 ### Installation
 
@@ -35,6 +38,12 @@ A comprehensive, automated setup script for macOS and Linux that installs and co
    ./install.sh
    ```
 
+   The script is **idempotent** - you can run it multiple times safely. It will:
+   - Check if components are already installed
+   - Update existing installations when appropriate
+   - Skip unnecessary operations
+   - Never overwrite user customizations unnecessarily
+
 3. **Restart your terminal** (or run `source ~/.zshrc`)
 
 4. **Configure your terminal/editor fonts** (see [Font Setup](#-font-setup) below)
@@ -46,29 +55,24 @@ That's it! Your environment is now fully configured.
 ### Core Components
 
 - **Homebrew** (or Linuxbrew on Linux) - Package manager
-- **Python** - Latest stable version or specified version (configurable)
-- **Node.js & npm** - Latest LTS or specified version via NVM (configurable)
-- **Zsh** - Z shell (if not already installed on Linux)
+- **Xcode Command Line Tools** (macOS) - Required development tools
+- **Python** - Latest stable version (configurable via `PYTHON_VERSION`)
+- **Zsh** - Z shell (installed on Linux if not present)
 - **Oh My Zsh** - Zsh configuration framework
 - **Powerlevel10k** - Zsh theme with instant prompt
 - **MesloLGS NF Fonts** - All 4 variants (Regular, Bold, Italic, Bold Italic)
-
-### macOS-Specific Components
-
-- **Xcode Command Line Tools** - Required developer tools (automatically installed)
-- **iTerm2** - Terminal emulator (optional, can be disabled)
+- **NVM** - Node Version Manager for Node.js
 
 ### Development Tools
 
 - **fzf** - Fuzzy finder for files, commands, history (with ripgrep and fd integration)
-- **ripgrep** - Fast text search engine (used by fzf for content search)
-- **fd** - Fast file finder (used by fzf for file search, called `fdfind` on Ubuntu)
+- **ripgrep** - Fast text search (used by fzf)
+- **fd** - Fast file finder (used by fzf)
 - **autojump** - Smart directory navigation (`j project-name`)
 - **eza** - Modern replacement for `ls` with icons and git status
 - **bat** - Better `cat` with syntax highlighting
 - **thefuck** - Typo corrector (type `fuck` or `f` after a typo)
 - **lazygit** - Terminal UI for Git (`lg` command)
-- **NVM** - Node Version Manager for multiple Node.js versions
 
 ### Zsh Plugins
 
@@ -76,111 +80,58 @@ That's it! Your environment is now fully configured.
 - **zsh-syntax-highlighting** - Highlights commands in real-time
 - **Oh My Zsh plugins**: git, z, fzf, autojump, colored-man-pages, web-search, extract
 
-## ⚙️ Configuration
+### Terminal Applications (macOS)
 
-The installation is fully configurable via `config.sh` or environment variables.
-
-### Using config.sh
-
-Edit `config.sh` to customize installation:
-
-```bash
-# Python version to install
-export PYTHON_VERSION="3.10"  # Options: "latest", "3.10", "3.11", "3.12", etc.
-
-# Node.js version to install via NVM
-export NODE_VERSION="lts"  # Options: "latest", "lts", or specific version like "20", "18"
-
-# Install iTerm2 on macOS (default: true)
-export INSTALL_ITERM2="false"
-
-# Install Xcode Command Line Tools on macOS (default: true)
-export INSTALL_XCODE_TOOLS="true"
-
-# Backup existing configuration files (default: true)
-export BACKUP_EXISTING="true"
-
-# Install development tools via Homebrew (default: true)
-export INSTALL_DEV_TOOLS="true"
-
-# Install Oh My Zsh (default: true)
-export INSTALL_OH_MY_ZSH="true"
-
-# Install Powerlevel10k (default: true)
-export INSTALL_POWERLEVEL10K="true"
-
-# Install MesloLGS NF Fonts (default: true)
-export INSTALL_FONTS="true"
-
-# Install NVM (default: true)
-export INSTALL_NVM="true"
-
-# Set default shell to zsh (default: true)
-export SET_DEFAULT_SHELL="true"
-```
-
-### Using Environment Variables
-
-You can also set environment variables directly:
-
-```bash
-PYTHON_VERSION=3.10 ./install.sh
-INSTALL_ITERM2=false ./install.sh
-NODE_VERSION=20 ./install.sh
-```
+- **iTerm2** - Enhanced terminal emulator (optional, can be disabled)
 
 ## 🎨 Font Setup
 
 Powerlevel10k requires **MesloLGS NF** fonts to display icons correctly. The installer automatically downloads and installs these fonts, but you need to configure your terminal/editor to use them.
 
-### Terminal Applications
+### macOS Terminal
 
-#### macOS Terminal
 1. Open Terminal → Preferences (⌘,)
 2. Select your profile → Text tab
 3. Click "Font" → Select "MesloLGS NF Regular" (or any MesloLGS NF variant)
 4. Set size to 12-14pt
 
-#### iTerm2 (macOS)
+### iTerm2 (macOS)
+
 1. Open iTerm2 → Preferences (⌘,)
 2. Profiles → Text → Font
 3. Select "MesloLGS NF Regular"
 4. Set size to 12-14pt
-5. **Pro Tip**: You can also set this as the default for all profiles
 
-#### Linux Terminal (GNOME Terminal)
+### Linux Terminal (GNOME Terminal)
+
 1. Edit → Preferences
 2. Select your profile → Text
 3. Custom font → Select "MesloLGS NF Regular"
 
-#### VS Code Integrated Terminal
+### VS Code Integrated Terminal
+
 1. Open VS Code Settings (⌘, or Ctrl+,)
 2. Search for "terminal font"
 3. Set `terminal.integrated.fontFamily` to: `"MesloLGS NF"`
 4. Or add to `settings.json`:
    ```json
    {
-     "terminal.integrated.fontFamily": "MesloLGS NF",
-     "terminal.integrated.fontSize": 12
+     "terminal.integrated.fontFamily": "MesloLGS NF"
    }
    ```
 
-#### Cursor IDE
+### Cursor IDE
+
 1. Open Settings (⌘, or Ctrl+,)
 2. Search for "terminal font"
 3. Set to: `"MesloLGS NF"`
-4. Or add to `settings.json`:
-   ```json
-   {
-     "terminal.integrated.fontFamily": "MesloLGS NF",
-     "terminal.integrated.fontSize": 12
-   }
-   ```
 
-#### Other Editors
+### Other Editors
+
 - **Sublime Text**: Preferences → Settings → Add `"font_face": "MesloLGS NF"`
 - **Atom**: Settings → Editor → Font Family → `"MesloLGS NF"`
 - **JetBrains IDEs**: Settings → Editor → Font → Select "MesloLGS NF"
+- **Vim/Neovim**: Configure terminal font in your terminal settings (see above)
 
 ### Verify Font Installation
 
@@ -197,12 +148,15 @@ fc-list | grep -i meslo
 ## 🎯 Custom Commands & Aliases
 
 ### Navigation
+
 - `..` - Go up one directory
 - `...` - Go up two directories
 - `ll` - List files with details (using eza)
 - `tree` - Show directory tree (using eza)
+- `j <directory>` - Jump to frequently used directory (autojump)
 
 ### Git Aliases
+
 - `gs` - `git status`
 - `ga` - `git add .`
 - `gc "message"` - `git commit -m "message"`
@@ -211,33 +165,48 @@ fc-list | grep -i meslo
 - `gl` - `git pull`
 - `gcb branch-name` - `git checkout -b branch-name`
 - `gpush` - Push current branch to origin
+- `lg` - Open lazygit (Git TUI)
 
 ### Custom Functions
 
 #### `mygit [project]`
-Navigate to a project in `~/Desktop/git/[project]` and open in VS Code.
+Navigate to a project in `~/Desktop/git/[project]` and open in your default editor.
 
+**Environment Variables:**
+- `MYGIT_PROJECTS_DIR` - Customize projects directory (default: `~/Desktop/git`)
+- `MYGIT_EDITOR` - Customize editor command (default: `code` for VS Code)
+
+**Usage:**
 ```bash
-mygit my-project    # Opens ~/Desktop/git/my-project in VS Code
+mygit my-project    # Opens ~/Desktop/git/my-project in editor
 mygit              # Navigates to ~/Desktop/git
 ```
 
 #### `mygit -n [project]`
-Create a new project directory and open in VS Code.
+Create a new project directory and open in editor.
 
 ```bash
-mygit -n new-app    # Creates ~/Desktop/git/new-app and opens in VS Code
+mygit -n new-app    # Creates ~/Desktop/git/new-app and opens in editor
+```
+
+**Example customization:**
+```bash
+export MYGIT_PROJECTS_DIR="$HOME/projects"
+export MYGIT_EDITOR="cursor"
 ```
 
 ### Modern Tool Aliases
+
 - `ls` / `ll` / `tree` - Uses `eza` instead of `ls` (with icons and git status)
 - `cat` - Uses `bat` instead (with syntax highlighting)
 - `f` / `fuck` - Fix last command typo (thefuck)
 - `lg` - Open lazygit (Git TUI)
+- `ff` - File finder with bat preview
+- `rgg "term"` - Search file content with ripgrep + fzf + bat preview
 
 ## 🔍 FZF (Fuzzy Finder) Usage Guide
 
-fzf is a powerful fuzzy finder that integrates with ripgrep and fd for fast file and content searching. Here are the most useful patterns:
+fzf is a powerful fuzzy finder that integrates with ripgrep and fd for fast file and content searching.
 
 ### Basic File Search
 
@@ -289,15 +258,6 @@ fd -e py | fzf        # Search only Python files
 fd -e js -e ts | fzf  # Search JavaScript and TypeScript files
 ```
 
-**Search with ripgrep and preview:**
-```bash
-# Search with line numbers and preview
-rg --line-number --no-heading --smart-case "YOUR_QUERY" . | \
-  fzf --delimiter : \
-      --preview 'bat --style=numbers --color=always --highlight-line {2} {1} --line-range $(( {2}-30 )):$(( {2}+30 ))' \
-      --preview-window 'up,60%,border-bottom,+{2}+3/3,~3'
-```
-
 ### FZF Key Bindings
 
 - `Enter` - Select item
@@ -308,40 +268,94 @@ rg --line-number --no-heading --smart-case "YOUR_QUERY" . | \
 - `?` - Toggle preview window (when available)
 - `Tab` - Select multiple items (multi-select mode)
 
-### Custom FZF Aliases
+## ⚙️ Configuration
 
-The configuration includes these custom aliases:
+### Environment Variables
 
-- `ff` - File finder with bat preview
-- `rgg "term"` - Search file content with ripgrep + fzf + bat preview
+You can customize the installation by setting environment variables before running `install.sh`:
 
-### Tips & Tricks
+```bash
+# Python version (default: "latest")
+PYTHON_VERSION=3.10 ./install.sh
 
-1. **Fast file navigation**: Type `Ctrl+T` anywhere in a command to insert a file path
-2. **History search**: `Ctrl+R` to search and reuse previous commands
-3. **Multi-select**: Press `Tab` to select multiple files, then `Enter` to process them
-4. **Preview**: Most fzf commands include syntax-highlighted previews using `bat`
-5. **Smart case**: ripgrep searches are case-insensitive by default, case-sensitive if you use uppercase
+# Node.js version (default: "lts")
+NODE_VERSION=20 ./install.sh
 
-## 🔧 Configuration Files
+# Skip iTerm2 installation on macOS
+INSTALL_ITERM2=false ./install.sh
 
-### `~/.zshrc`
-Your main Zsh configuration file. Includes:
-- Powerlevel10k instant prompt
-- Oh My Zsh setup
-- Plugin configurations
-- Custom aliases and functions
-- Environment variables (NVM, Java, custom paths)
-- Modern tool integrations
+# Skip Xcode Command Line Tools
+INSTALL_XCODE_TOOLS=false ./install.sh
 
-### `~/.p10k.zsh`
-Powerlevel10k theme configuration. Customized with:
-- Classic powerline style
-- Unicode icons
-- Dark theme
-- 12-hour time format
-- Compact layout
-- Virtualenv support
+# Skip font installation
+INSTALL_FONTS=false ./install.sh
+
+# Combine multiple options
+PYTHON_VERSION=3.10 NODE_VERSION=20 INSTALL_ITERM2=false ./install.sh
+```
+
+### Configuration File
+
+Create a `config.sh` file in the repository root to persist your configuration:
+
+```bash
+# config.sh
+export PYTHON_VERSION="latest"
+export NODE_VERSION="lts"
+export INSTALL_ITERM2="true"
+export INSTALL_XCODE_TOOLS="true"
+export BACKUP_EXISTING="true"
+export INSTALL_DEV_TOOLS="true"
+export INSTALL_OH_MY_ZSH="true"
+export INSTALL_POWERLEVEL10K="true"
+export INSTALL_FONTS="true"
+export INSTALL_NVM="true"
+export SET_DEFAULT_SHELL="true"
+```
+
+### Configuration Files Location
+
+- **`~/.zshrc`** - Main Zsh configuration file
+- **`~/.p10k.zsh`** - Powerlevel10k theme configuration
+- **`config.sh`** (in repo) - Installation configuration
+
+## 🔧 Customization
+
+### Changing Powerlevel10k Theme
+
+Run the configuration wizard:
+```bash
+p10k configure
+```
+
+### Adding More Oh My Zsh Plugins
+
+Edit `~/.zshrc` and add to the `plugins` array:
+```zsh
+plugins=(
+  git
+  z
+  fzf
+  # Add more plugins here
+  docker
+  kubectl
+  python
+)
+```
+
+Then reload:
+```bash
+source ~/.zshrc
+```
+
+### Custom Aliases
+
+Add to `~/.zshrc`:
+```zsh
+# Your custom aliases
+alias myalias='your command here'
+alias gs='git status'
+```
 
 ## 🔄 Updating
 
@@ -353,15 +367,14 @@ git pull
 ./install.sh
 ```
 
-The installer will:
-- Update Powerlevel10k to the latest version
-- Update Oh My Zsh
-- Update NVM
-- Preserve your existing `.zshrc` and `.p10k.zsh` (if they exist)
+The script is idempotent, so running it multiple times is safe. It will:
+- Update Powerlevel10k if installed via git
+- Update `~/.zshrc` if the repo version changed
+- Skip components that are already installed and up-to-date
 
 ## 🗑️ Uninstalling
 
-To safely remove all installed components:
+To remove components installed by this setup:
 
 ```bash
 ./uninstall.sh
@@ -369,120 +382,126 @@ To safely remove all installed components:
 
 The uninstall script will:
 - Ask for confirmation before removing each component
-- Restore your original `.zshrc` from backup (if available)
-- Remove Powerlevel10k, Oh My Zsh, NVM, and fonts
-- Optionally remove Homebrew packages
-- **Note**: Homebrew itself is not automatically removed (you can do this manually if needed)
+- Restore backups if available
+- **Never remove** system files, Homebrew itself, or user data
+- Preserve backups for recovery
 
-## 🧪 Testing
+**What gets removed (with confirmation):**
+- Oh My Zsh
+- Powerlevel10k
+- NVM
+- MesloLGS NF fonts
+- Homebrew packages (fzf, autojump, eza, etc.)
+- `~/.zshrc` (with backup restoration option)
+- `~/.p10k.zsh` (with backup restoration option)
 
-This repository includes comprehensive tests with pytest.
-
-### Running Tests
-
-1. **Install test dependencies:**
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-2. **Run tests:**
-   ```bash
-   pytest tests/ -v
-   ```
-
-3. **Run tests with coverage:**
-   ```bash
-   pytest tests/ -v --cov=. --cov-report=html --cov-report=term
-   ```
-
-4. **View coverage report:**
-   ```bash
-   open htmlcov/index.html  # macOS
-   xdg-open htmlcov/index.html  # Linux
-   ```
-
-### Test Coverage
-
-The test suite aims for 90-100% code coverage and includes:
-- Script syntax validation
-- Configuration file validation
-- Installation function tests
-- Safety check tests
-- Error handling tests
-- Uninstall script tests
+**What is NOT removed:**
+- Homebrew itself
+- iTerm2
+- Xcode Command Line Tools
+- Python installations
+- Node.js installations (if NVM is kept)
+- System files or other user data
 
 ## 🐛 Troubleshooting
 
 ### Fonts Not Displaying Correctly
+
 1. Verify fonts are installed (see [Font Setup](#-font-setup))
 2. Ensure your terminal/editor is using "MesloLGS NF" font
 3. Restart terminal/editor after font change
-4. On Linux, refresh font cache: `fc-cache -f ~/.local/share/fonts`
+4. Clear font cache on Linux: `fc-cache -fv`
 
 ### Powerlevel10k Prompt Not Showing
+
 1. Check that `~/.p10k.zsh` exists
 2. Verify `~/.zshrc` sources it: `[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh`
 3. Run `source ~/.zshrc`
-4. Check for errors: `zsh -x ~/.zshrc 2>&1 | grep -i error`
+4. Check for errors: `zsh -n ~/.zshrc`
 
 ### Command Not Found Errors
+
 1. Ensure Homebrew is in PATH:
    ```bash
    eval "$(/opt/homebrew/bin/brew shellenv)"  # macOS Apple Silicon
    # or
    eval "$(/usr/local/Homebrew/bin/brew shellenv)"  # macOS Intel
-   # or
    eval "$($HOME/.linuxbrew/bin/brew shellenv)"  # Linux
    ```
 2. Restart terminal or run `source ~/.zshrc`
+3. Check if tool is installed: `brew list <package>`
 
 ### NVM Not Working
+
 1. Ensure NVM is installed: `test -d ~/.nvm`
 2. Check `~/.zshrc` includes NVM setup
 3. Restart terminal or run: `source ~/.nvm/nvm.sh`
-4. Verify Node.js is installed: `nvm list`
+4. Verify NVM is loaded: `command -v nvm`
 
 ### Python Version Issues
-1. Check installed version: `python3 --version`
-2. Verify Homebrew Python: `brew list python` or `brew list python@3.10`
+
+1. Check installed Python: `python3 --version`
+2. Verify Homebrew Python: `brew list python`
 3. Check PATH: `which python3`
-4. If needed, reinstall: `brew reinstall python` or `brew reinstall python@3.10`
+4. Use specific version: `PYTHON_VERSION=3.10 ./install.sh`
 
-### Xcode Command Line Tools Issues (macOS)
-1. Check if installed: `xcode-select -p`
-2. If not installed, run: `xcode-select --install`
-3. Accept license: `sudo xcodebuild -license accept`
-4. Verify: `xcode-select -p`
+### Installation Fails on Linux
 
-### iTerm2 Not Installing
-1. Ensure Homebrew is installed and in PATH
-2. Check if already installed: `test -d /Applications/iTerm.app`
-3. Try manual installation: `brew install --cask iterm2`
-4. Or download from: https://iterm2.com/
+1. Ensure you have sudo access
+2. Install prerequisites manually:
+   ```bash
+   # Ubuntu/Debian
+   sudo apt-get update && sudo apt-get install -y build-essential curl file git zsh
+
+   # RHEL/Fedora
+   sudo dnf groupinstall -y "Development Tools"
+   sudo dnf install -y curl file git zsh
+   ```
+3. Re-run `./install.sh`
 
 ### Restore Previous Configuration
-If something goes wrong, restore your backup:
 
+If something goes wrong, restore your backup:
 ```bash
 cp ~/.zshrc.pre-mlubich-backup ~/.zshrc
 source ~/.zshrc
 ```
 
-## 📝 File Structure
+## 🧪 Testing
+
+This repository includes comprehensive tests. To run them:
+
+```bash
+# Install test dependencies
+pip install -r requirements-test.txt
+
+# Run tests
+pytest
+
+# Run with coverage report
+pytest --cov=. --cov-report=html
+
+# View coverage report
+open htmlcov/index.html  # macOS
+xdg-open htmlcov/index.html  # Linux
+```
+
+Test coverage target: **90%+**
+
+## 📁 File Structure
 
 ```
 zshrc/
-├── install.sh          # Main installation script
-├── uninstall.sh        # Uninstall script
-├── config.sh           # Configuration file
+├── install.sh          # Main installation script (idempotent)
+├── uninstall.sh        # Uninstallation script
+├── config.sh           # Configuration file (optional)
 ├── zshrc               # Zsh configuration template
 ├── p10k.zsh            # Powerlevel10k theme configuration
 ├── README.md           # This file
-├── requirements.txt    # Python dependencies for testing
 ├── .gitignore          # Git ignore rules
-├── tests/              # Test suite
-│   ├── __init__.py
-│   └── test_install.py
+├── requirements.txt    # Python dependencies
+├── requirements-test.txt  # Test dependencies
+├── pytest.ini          # Pytest configuration
 └── docs/               # Documentation
     ├── architecture.md
     ├── requirements.md
@@ -491,22 +510,23 @@ zshrc/
     └── api.md
 ```
 
-## 🔒 Safety & Best Practices
+## 🛡️ Safety & Design Principles
 
-### What This Script Does
-- ✅ Backs up existing `.zshrc` before modifying
-- ✅ Checks if components are already installed before installing
-- ✅ Uses non-destructive operations
-- ✅ Provides comprehensive logging
-- ✅ Supports configuration via environment variables
-- ✅ Includes uninstall script for safe removal
+### Safety Features
 
-### What This Script Does NOT Do
-- ❌ Modify system files outside of `$HOME`
-- ❌ Remove existing configurations without backup
-- ❌ Install system-level packages without user confirmation (Linux)
-- ❌ Overwrite existing `.p10k.zsh` if it exists
-- ❌ Force uninstall of Homebrew (must be done manually)
+- **Backup mechanism** - Automatically backs up existing configs before modification
+- **Idempotent** - Safe to run multiple times
+- **No system file modification** - Only modifies user-space files
+- **Confirmation prompts** - Uninstall script asks for confirmation
+- **Error handling** - Fails fast with clear error messages
+
+### Design Principles
+
+- **Extensibility** - Easy to add new tools and configurations
+- **Portability** - Works on macOS and Linux
+- **User-friendly** - Clear logging and helpful error messages
+- **Maintainable** - Well-organized, documented code
+- **Testable** - Comprehensive test coverage
 
 ## 📚 Additional Resources
 
@@ -516,16 +536,11 @@ zshrc/
 - [fzf Documentation](https://github.com/junegunn/fzf)
 - [MesloLGS NF Fonts](https://github.com/romkatv/powerlevel10k-media)
 - [Homebrew Documentation](https://brew.sh/)
-- [iTerm2 Documentation](https://iterm2.com/documentation.html)
+- [Zsh Documentation](https://www.zsh.org/)
 
 ## 🤝 Contributing
 
 This is a personal configuration repository. Feel free to fork and customize for your own needs!
-
-If you find bugs or have suggestions:
-1. Open an issue describing the problem
-2. Provide your OS and version information
-3. Include relevant error messages or logs
 
 ## 📄 License
 
@@ -539,4 +554,4 @@ Personal use. See repository for details.
 
 ---
 
-**Note**: This setup is optimized for macOS but works on Linux as well. Some paths and commands may vary by OS. The script automatically detects your OS and adjusts accordingly.
+**Note**: This setup is optimized for macOS but works on Linux as well. Some paths and commands may vary by OS. The installer automatically detects your OS and uses the appropriate installation methods.

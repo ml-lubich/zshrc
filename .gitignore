@@ -40,14 +40,104 @@ __pycache__/
 .coverage.*
 coverage.xml
 *.cover
+.pytest_cache/
+.mypy_cache/
+.dmypy.json
+dmypy.json
 
 # Python virtual environments
 venv/
 env/
 ENV/
+.venv/
 
 # Personal notes
 NOTES.md
 TODO.md
 *.md.bak
 
+# Installation artifacts
+*.pre-mlubich-backup
+.zshrc.pre-mlubich-backup*
+.p10k.zsh.pre-mlubich-backup*
+
+# Shell scripts (if any are generated)
+*.sh.bak
+
+# Local configuration overrides
+config.local.sh
+.env.local
+
+# macOS specific
+.AppleDouble
+.LSOverride
+.Spotlight-V100
+.Trashes
+.DocumentRevisions-V100
+.fseventsd
+.Symlinks
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+
+# Linux specific
+.directory
+.Trash-*
+.nfs*
+
+# Node.js (if installed)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Python
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# pytest
+.pytest_cache/
+.tox/
+.hypothesis/
+
+# Coverage reports
+htmlcov/
+.coverage
+.coverage.*
+coverage.xml
+*.cover
+.hypothesis/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.classpath
+.settings/
+*.sublime-project
+*.sublime-workspace
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Generated files
+*.generated.*
+*.min.js
+*.min.css
