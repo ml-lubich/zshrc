@@ -10,16 +10,19 @@ set -euo pipefail
 # - Installs Node.js via NVM (latest LTS or specified version)
 # - Installs MesloLGS Nerd Fonts required for Powerlevel10k
 # - Installs Powerlevel10k
-# - Backs up any existing ~/.zshrc and replaces it with the one from this repo
 # - Installs Oh My Zsh (recommended for P10k)
+# - Copies this repo's zsh configuration to ~/.zshrc.mlubich
+# - Injects a small loader block into ~/.zshrc that sources ~/.zshrc.mlubich
+#   without overwriting existing user configuration
 #
 # This script is configurable via config.sh or environment variables
 # See config.sh for all available options
 
-REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_DIR="$(cd "${SCRIPT_DIR}/.." && pwd)"
 
-# Source configuration if it exists
-[ -f "${REPO_DIR}/config.sh" ] && source "${REPO_DIR}/config.sh"
+# Source configuration if it exists (from scripts directory)
+[ -f "${SCRIPT_DIR}/config.sh" ] && source "${SCRIPT_DIR}/config.sh"
 
 # Set defaults if not set by config.sh
 PYTHON_VERSION="${PYTHON_VERSION:-latest}"

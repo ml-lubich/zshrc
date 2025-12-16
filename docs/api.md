@@ -6,7 +6,7 @@ This repository exposes a single “public API”:
   - `install.sh`
     - Usage:
       ```bash
-      ./install.sh
+      ./scripts/install.sh
       ```
     - Behavior:
       - Detect OS.

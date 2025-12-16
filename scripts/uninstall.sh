@@ -276,7 +276,7 @@ main() {
   - Check for backup files: ~/.zshrc.pre-mlubich-backup-*
   - Restore manually: cp ~/.zshrc.pre-mlubich-backup-* ~/.zshrc
 
-📖 To reinstall, run: ./install.sh
+📖 To reinstall, run: ./scripts/install.sh
 =====================================================
 EOF
 }

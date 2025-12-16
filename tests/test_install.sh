@@ -7,6 +7,7 @@ set -euo pipefail
 
 TEST_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_DIR="$(cd "$TEST_DIR/.." && pwd)"
+SCRIPTS_DIR="${REPO_DIR}/scripts"
 
 test_count=0
 pass_count=0
@@ -26,7 +27,7 @@ test_fail() {
 }
 
 test_syntax_check() {
-  if bash -n "$REPO_DIR/install.sh"; then
+  if bash -n "$SCRIPTS_DIR/install.sh"; then
     test_pass "install.sh syntax check"
   else
     test_fail "install.sh syntax check"
@@ -34,7 +35,7 @@ test_syntax_check() {
 }
 
 test_uninstall_syntax_check() {
-  if bash -n "$REPO_DIR/uninstall.sh"; then
+  if bash -n "$SCRIPTS_DIR/uninstall.sh"; then
     test_pass "uninstall.sh syntax check"
   else
     test_fail "uninstall.sh syntax check"
@@ -72,7 +73,7 @@ test_install_functions_defined() {
   local all_found=true
   for func in "${functions[@]}"; do
     # Check for function definition (with or without spaces before the parenthesis)
-    if ! grep -qE "^${func}\s*\(\)" "$REPO_DIR/install.sh"; then
+    if ! grep -qE "^${func}\s*\(\)" "$SCRIPTS_DIR/install.sh"; then
       test_fail "Function $func not found in install.sh"
       all_found=false
     fi
@@ -88,7 +89,7 @@ test_safety_checks() {
   # Look for /etc/ references that WRITE (not read-only)
   # Reading from /etc/os-release is safe
   local dangerous_ops
-  dangerous_ops=$(grep -nE "(rm|cp|mv|>|>>).*\/etc\/" "$REPO_DIR/install.sh" | grep -v "^[[:space:]]*#" || true)
+  dangerous_ops=$(grep -nE "(rm|cp|mv|>|>>).*\/etc\/" "$SCRIPTS_DIR/install.sh" | grep -v "^[[:space:]]*#" || true)
   if [ -n "$dangerous_ops" ]; then
     test_fail "install.sh may modify system files in /etc/: $dangerous_ops"
   else
@@ -96,7 +97,7 @@ test_safety_checks() {
   fi
   
   # Check that backups are created
-  if grep -q "BACKUP_SUFFIX\|\.pre-mlubich-backup" "$REPO_DIR/install.sh"; then
+  if grep -q "BACKUP_SUFFIX\|\.pre-mlubich-backup" "$SCRIPTS_DIR/install.sh"; then
     test_pass "install.sh creates backups"
   else
     test_fail "install.sh doesn't create backups"

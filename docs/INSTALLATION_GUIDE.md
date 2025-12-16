@@ -31,8 +31,8 @@ Edit `config.sh` if you want to customize:
 ### Step 3: Run Installation
 
 ```bash
-chmod +x install.sh
-./install.sh
+chmod +x scripts/install.sh scripts/uninstall.sh scripts/config.sh
+./scripts/install.sh
 ```
 
 The script will:
@@ -168,19 +168,19 @@ You can customize installation without editing `config.sh`:
 
 ```bash
 # Install Python 3.10 instead of latest
-PYTHON_VERSION=3.10 ./install.sh
+PYTHON_VERSION=3.10 ./scripts/install.sh
 
 # Install specific Node.js version
-NODE_VERSION=20 ./install.sh
+NODE_VERSION=20 ./scripts/install.sh
 
 # Skip iTerm2 installation
-INSTALL_ITERM2=false ./install.sh
+INSTALL_ITERM2=false ./scripts/install.sh
 
 # Skip font installation
-INSTALL_FONTS=false ./install.sh
+INSTALL_FONTS=false ./scripts/install.sh
 
 # Combine options
-PYTHON_VERSION=3.10 NODE_VERSION=20 INSTALL_ITERM2=false ./install.sh
+PYTHON_VERSION=3.10 NODE_VERSION=20 INSTALL_ITERM2=false ./scripts/install.sh
 ```
 
 ### config.sh Options
@@ -214,17 +214,17 @@ The installation script is **idempotent** - safe to run multiple times:
 
 ### Running Multiple Times
 
-You can safely run `./install.sh` multiple times:
+You can safely run `./scripts/install.sh` multiple times:
 
 ```bash
 # First run - installs everything
-./install.sh
+./scripts/install.sh
 
 # Second run - updates if repo changed, skips if already up to date
-./install.sh
+./scripts/install.sh
 
 # Third run - same behavior
-./install.sh
+./scripts/install.sh
 ```
 
 ## Customization
@@ -311,7 +311,7 @@ cp ~/.p10k.zsh.pre-mlubich-backup ~/.p10k.zsh
 To safely remove all components:
 
 ```bash
-./uninstall.sh
+./scripts/uninstall.sh
 ```
 
 The uninstall script will:

@@ -34,8 +34,8 @@ A comprehensive, automated setup script for macOS and Linux that installs and co
 
 2. **Run the installation script:**
    ```bash
-   chmod +x install.sh
-   ./install.sh
+   chmod +x scripts/install.sh scripts/uninstall.sh scripts/config.sh
+   ./scripts/install.sh
    ```
 
    The script is **idempotent** - you can run it multiple times safely. It will:

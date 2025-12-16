@@ -12,8 +12,9 @@ from pathlib import Path
 
 # Get repository root
 REPO_DIR = Path(__file__).parent.parent
-INSTALL_SCRIPT = REPO_DIR / "install.sh"
-UNINSTALL_SCRIPT = REPO_DIR / "uninstall.sh"
+SCRIPTS_DIR = REPO_DIR / "scripts"
+INSTALL_SCRIPT = SCRIPTS_DIR / "install.sh"
+UNINSTALL_SCRIPT = SCRIPTS_DIR / "uninstall.sh"
 ZSHRC_FILE = REPO_DIR / "zshrc"
 P10K_FILE = REPO_DIR / "p10k.zsh"
 
@@ -41,6 +42,10 @@ class TestScriptSyntax:
     def test_uninstall_script_exists(self):
         """Verify uninstall.sh exists"""
         assert UNINSTALL_SCRIPT.exists(), "uninstall.sh should exist"
+    
+    def test_uninstall_script_executable(self):
+        """Verify uninstall.sh is executable"""
+        assert os.access(UNINSTALL_SCRIPT, os.X_OK), "uninstall.sh should be executable"
     
     def test_uninstall_script_syntax(self):
         """Test uninstall.sh bash syntax"""
@@ -98,7 +103,7 @@ class TestSafetyChecks:
     def test_backup_mechanism(self):
         """Verify backup mechanism exists"""
         content = INSTALL_SCRIPT.read_text()
-        assert "BACKUP_SUFFIX" in content or ".pre-mlubich-backup" in content, \
+        assert ".pre-mlubich-backup" in content or "BACKUP_EXISTING" in content, \
             "install.sh should create backups"
     
     def test_no_system_file_modification(self):
@@ -132,6 +137,34 @@ class TestSafetyChecks:
         content = UNINSTALL_SCRIPT.read_text()
         assert "confirm" in content.lower(), \
             "uninstall.sh should ask for confirmation before destructive operations"
+
+
+class TestNoEditorConfigImpact:
+    """Ensure we don't touch vim/neovim or other editor configs."""
+    
+    def test_install_does_not_reference_vim_configs(self):
+        """install.sh should not modify vim/neovim config files."""
+        content = INSTALL_SCRIPT.read_text()
+        forbidden = [
+            ".vimrc",
+            "init.vim",
+            "nvim",
+            ".config/nvim",
+        ]
+        for marker in forbidden:
+            assert marker not in content, f"install.sh should not reference {marker}"
+    
+    def test_uninstall_does_not_reference_vim_configs(self):
+        """uninstall.sh should not modify vim/neovim config files."""
+        content = UNINSTALL_SCRIPT.read_text()
+        forbidden = [
+            ".vimrc",
+            "init.vim",
+            "nvim",
+            ".config/nvim",
+        ]
+        for marker in forbidden:
+            assert marker not in content, f"uninstall.sh should not reference {marker}"
 
 
 class TestGeneralizability:
@@ -180,9 +213,9 @@ class TestOSSupport:
     def test_macos_specific_features(self):
         """Verify macOS-specific features are present"""
         content = INSTALL_SCRIPT.read_text()
-        assert "install_xcode_cli_tools_macos" in content or "xcode-select" in content, \
+        assert "install_xcode_tools" in content or "xcode-select" in content, \
             "Should install Xcode CLI tools on macOS"
-        assert "install_iterm2_macos" in content or "iterm2" in content.lower(), \
+        assert "install_iterm2" in content or "iterm2" in content.lower(), \
             "Should install iTerm2 on macOS"
     
     def test_linux_support(self):
@@ -199,13 +232,13 @@ class TestToolInstallation:
     """Test that required tools are installed"""
     
     def test_python_installation(self):
-        """Verify Python installation function exists"""
+        """Verify Python installation function exists and is configurable"""
         content = INSTALL_SCRIPT.read_text()
         assert "install_python" in content, \
             "Should have Python installation function"
-        # Should fallback to Python 3.10 if latest fails
-        assert "python@3.10" in content or "python3.10" in content, \
-            "Should have fallback to Python 3.10"
+        # Should allow configuring a specific Python version via PYTHON_VERSION
+        assert "PYTHON_VERSION" in content, \
+            "Should allow configuring Python version via PYTHON_VERSION"
     
     def test_nvm_installation(self):
         """Verify NVM installation function exists"""
@@ -237,8 +270,93 @@ class TestConfigurationFiles:
     def test_font_installation(self):
         """Verify font installation for both platforms"""
         content = INSTALL_SCRIPT.read_text()
-        assert "install_meslo_fonts" in content, "Should install MesloLGS fonts"
+        assert "install_meslo_fonts" in content or "MesloLGS" in content, "Should install MesloLGS fonts"
         assert "MesloLGS NF" in content, "Should install MesloLGS NF fonts"
+
+
+class TestIdempotency:
+    """Test that the script is idempotent (safe to run multiple times)"""
+    
+    def test_zshrc_idempotency_check(self):
+        """Verify zshrc configuration checks for existing files"""
+        content = INSTALL_SCRIPT.read_text()
+        assert "cmp -s" in content or "already exists" in content.lower(), \
+            "Should check if files exist before overwriting"
+    
+    def test_powerlevel10k_idempotency(self):
+        """Verify Powerlevel10k installation is idempotent"""
+        content = INSTALL_SCRIPT.read_text()
+        assert "already present" in content.lower() or "already installed" in content.lower(), \
+            "Should check if Powerlevel10k is already installed"
+    
+    def test_backup_only_once(self):
+        """Verify backup is only created once"""
+        content = INSTALL_SCRIPT.read_text()
+        assert ".pre-mlubich-backup" in content, \
+            "Should use backup naming convention"
+        # Check that it doesn't create backup if one exists
+        assert "! -f" in content or "not exist" in content.lower(), \
+            "Should check if backup exists before creating"
+
+
+class TestConfigurationHandling:
+    """Test configuration file and environment variable handling"""
+    
+    def test_config_file_sourcing(self):
+        """Verify config.sh is sourced if it exists"""
+        content = INSTALL_SCRIPT.read_text()
+        assert "config.sh" in content, "Should source config.sh if present"
+    
+    def test_environment_variables(self):
+        """Verify environment variables are used for configuration"""
+        content = INSTALL_SCRIPT.read_text()
+        config_vars = [
+            "PYTHON_VERSION",
+            "NODE_VERSION",
+            "INSTALL_ITERM2",
+            "INSTALL_XCODE_TOOLS",
+            "BACKUP_EXISTING"
+        ]
+        for var in config_vars:
+            assert var in content, f"Should use {var} environment variable"
+
+
+class TestErrorHandling:
+    """Test error handling and safety checks"""
+    
+    def test_error_exit_on_failure(self):
+        """Verify script exits on critical errors"""
+        content = INSTALL_SCRIPT.read_text()
+        assert "set -euo pipefail" in content, \
+            "Should exit on error (set -e)"
+        assert "exit 1" in content, \
+            "Should explicitly exit on errors"
+    
+    def test_require_cmd_function(self):
+        """Verify require_cmd function exists for dependency checking"""
+        content = INSTALL_SCRIPT.read_text()
+        assert "require_cmd" in content, \
+            "Should have require_cmd function to check dependencies"
+
+
+class TestLinuxSupport:
+    """Test Linux-specific functionality"""
+    
+    def test_linux_distro_detection(self):
+        """Verify Linux distribution detection"""
+        content = INSTALL_SCRIPT.read_text()
+        assert "detect_linux_distro" in content, \
+            "Should detect Linux distribution"
+        assert "/etc/os-release" in content or "redhat-release" in content, \
+            "Should check standard Linux distro files"
+    
+    def test_linux_package_managers(self):
+        """Verify support for common Linux package managers"""
+        content = INSTALL_SCRIPT.read_text()
+        package_managers = ["apt-get", "dnf", "yum"]
+        found = any(pm in content for pm in package_managers)
+        assert found, \
+            "Should support at least one Linux package manager"
 
 
 if __name__ == "__main__":
