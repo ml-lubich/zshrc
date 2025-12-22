@@ -2,6 +2,40 @@
 
 A comprehensive, automated setup script for macOS and Linux that installs and configures a complete development environment with Powerlevel10k, modern development tools, and a beautiful terminal experience.
 
+## 📑 Table of Contents
+
+- [✨ Features](#-features)
+- [🚀 Quick Start](#-quick-start)
+  - [Prerequisites](#prerequisites)
+  - [Installation](#installation)
+- [📦 What Gets Installed](#-what-gets-installed)
+  - [Core Components](#core-components)
+  - [Development Tools](#development-tools)
+  - [Zsh Plugins](#zsh-plugins)
+  - [Terminal Applications (macOS)](#terminal-applications-macos)
+- [🎨 Font Setup](#-font-setup)
+- [📝 Understanding the Configuration Files](#-understanding-the-configuration-files)
+  - [zshrc (Main Shell Configuration)](#zshrc-main-shell-configuration)
+  - [config/p10k.zsh (Theme Appearance)](#configp10kzsh-theme-appearance)
+- [🎯 Custom Commands & Aliases](#-custom-commands--aliases)
+  - [Navigation](#navigation)
+  - [Git Aliases](#git-aliases)
+  - [Custom Functions](#custom-functions)
+  - [Modern Tool Aliases](#modern-tool-aliases)
+- [🔍 FZF (Fuzzy Finder) Usage Guide](#-fzf-fuzzy-finder-usage-guide)
+- [⚙️ Configuration](#️-configuration)
+- [🔧 Customization](#-customization)
+- [🔄 Updating](#-updating)
+- [🗑️ Uninstalling](#️-uninstalling)
+- [🐛 Troubleshooting](#-troubleshooting)
+- [🧪 Testing](#-testing)
+- [📁 File Structure](#-file-structure)
+- [🛡️ Safety & Design Principles](#️-safety--design-principles)
+- [📚 Additional Resources](#-additional-resources)
+- [🤝 Contributing](#-contributing)
+- [📄 License](#-license)
+- [👤 Author](#-author)
+
 ## ✨ Features
 
 - **Powerlevel10k** - Beautiful, fast, and highly customizable Zsh prompt with instant prompt
