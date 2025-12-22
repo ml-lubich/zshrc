@@ -1,7 +1,7 @@
 ## Design
 
 - **Single entrypoint**
-  - `install.sh` is the one script you run; it orchestrates everything.
+  - `scripts/install.sh` is the one script you run; it orchestrates everything.
 
 - **OS-specific behavior**
   - A small OS detection function chooses between macOS and Linux paths.
@@ -12,8 +12,15 @@
   - No silent fallbacks: failures are logged, and the script exits on critical errors.
 
 - **User safety**
-  - Existing `~/.zshrc` is backed up once as `~/.zshrc.pre-mlubich-backup`.
-  - Powerlevel10k configuration is only created if it does not already exist.
+  - Existing `~/.zshrc` is backed up once as `~/.zshrc.pre-mlubich-backup` before modification.
+  - `p10k.zsh` from repo is only copied to `~/.p10k.zsh` if it doesn't exist (preserves user customizations).
+  - Both `zshrc` and `p10k.zsh` are tracked in git and properly handled by the installation script.
+
+- **File organization**
+  - Scripts in `scripts/` directory
+  - Configuration templates (`zshrc`, `p10k.zsh`) in repo root
+  - Tests in `tests/` directory
+  - Documentation in `docs/` directory
 
 
 

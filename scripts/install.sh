@@ -11,9 +11,9 @@ set -euo pipefail
 # - Installs MesloLGS Nerd Fonts required for Powerlevel10k
 # - Installs Powerlevel10k
 # - Installs Oh My Zsh (recommended for P10k)
-# - Copies this repo's zsh configuration to ~/.zshrc.mlubich
-# - Injects a small loader block into ~/.zshrc that sources ~/.zshrc.mlubich
-#   without overwriting existing user configuration
+# - Copies this repo's zsh configuration to ~/.zshrc (with backup)
+# - Copies this repo's p10k.zsh to ~/.p10k.zsh (only if it doesn't exist)
+# - Backs up existing configurations before modification
 #
 # This script is configurable via config.sh or environment variables
 # See config.sh for all available options

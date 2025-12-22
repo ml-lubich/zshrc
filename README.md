@@ -493,21 +493,31 @@ Test coverage target: **90%+**
 
 ```
 zshrc/
-├── install.sh          # Main installation script (idempotent)
-├── uninstall.sh        # Uninstallation script
-├── config.sh           # Configuration file (optional)
-├── zshrc               # Zsh configuration template
-├── p10k.zsh            # Powerlevel10k theme configuration
+├── scripts/
+│   ├── install.sh      # Main installation script (idempotent)
+│   ├── uninstall.sh    # Uninstallation script
+│   └── config.sh       # Configuration file (optional)
+├── zshrc               # Zsh configuration template (copied to ~/.zshrc)
+├── p10k.zsh            # Powerlevel10k theme configuration (copied to ~/.p10k.zsh)
 ├── README.md           # This file
 ├── .gitignore          # Git ignore rules
 ├── requirements.txt    # Python dependencies (includes test dependencies)
 ├── pytest.ini          # Pytest configuration
-└── docs/               # Documentation
-    ├── architecture.md
-    ├── requirements.md
-    ├── testing.md
-    ├── design.md
-    └── api.md
+├── .coveragerc         # Coverage configuration
+├── docs/               # Documentation
+│   ├── architecture.md
+│   ├── requirements.md
+│   ├── testing.md
+│   ├── design.md
+│   ├── api.md
+│   └── INSTALLATION_GUIDE.md
+└── tests/              # Test suite
+    ├── __init__.py
+    ├── conftest.py
+    ├── test_install.py
+    ├── test_install_script.py
+    ├── test_install.sh
+    └── test_zshrc_config.py
 ```
 
 ## 🛡️ Safety & Design Principles
