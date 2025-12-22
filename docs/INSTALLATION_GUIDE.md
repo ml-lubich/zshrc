@@ -31,9 +31,10 @@ Edit `config.sh` if you want to customize:
 ### Step 3: Run Installation
 
 ```bash
-chmod +x scripts/install.sh scripts/uninstall.sh scripts/config.sh
 ./scripts/install.sh
 ```
+
+Note: Scripts are already executable. If you encounter permission issues, run `chmod +x scripts/*.sh`
 
 The script will:
 - ✅ Check for required dependencies
