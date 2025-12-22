@@ -426,26 +426,73 @@ install_meslo_fonts_macos() {
     return 0
   fi
 
-  log "Installing MesloLGS Nerd Fonts (macOS)..."
+  log "Checking MesloLGS Nerd Fonts (macOS)..."
   local font_dir="$HOME/Library/Fonts"
   mkdir -p "$font_dir"
 
+  # Check if all fonts are already installed
+  local fonts=(
+    "MesloLGS NF Regular.ttf"
+    "MesloLGS NF Bold.ttf"
+    "MesloLGS NF Italic.ttf"
+    "MesloLGS NF Bold Italic.ttf"
+  )
+  
+  local all_present=true
+  for font in "${fonts[@]}"; do
+    if [ ! -f "${font_dir}/${font}" ]; then
+      all_present=false
+      break
+    fi
+  done
+
+  if [ "$all_present" = "true" ]; then
+    log "All MesloLGS NF fonts are already installed. Skipping download."
+    return 0
+  fi
+
+  log "Installing missing MesloLGS Nerd Fonts..."
   base_url="https://github.com/romkatv/powerlevel10k-media/raw/master"
-  for font in "MesloLGS NF Regular.ttf" "MesloLGS NF Bold.ttf" "MesloLGS NF Italic.ttf" "MesloLGS NF Bold Italic.ttf"; do
-    local url="${base_url}/MesloLGS%20NF%20${font#MesloLGS NF }"
+  
+  for font in "${fonts[@]}"; do
     local dest="${font_dir}/${font}"
     if [ -f "$dest" ]; then
-      log "Font already present: $dest"
+      log "Font already present: $font"
       continue
     fi
+    
+    # Fix URL construction for all font variants
+    local font_suffix
+    case "$font" in
+      "MesloLGS NF Regular.ttf")
+        font_suffix="Regular.ttf"
+        ;;
+      "MesloLGS NF Bold.ttf")
+        font_suffix="Bold.ttf"
+        ;;
+      "MesloLGS NF Italic.ttf")
+        font_suffix="Italic.ttf"
+        ;;
+      "MesloLGS NF Bold Italic.ttf")
+        font_suffix="Bold%20Italic.ttf"
+        ;;
+      *)
+        font_suffix="${font#MesloLGS NF }"
+        font_suffix="${font_suffix// /%20}"
+        ;;
+    esac
+    
+    local url="${base_url}/MesloLGS%20NF%20${font_suffix}"
     log "Downloading $font..."
     curl -fsSL -o "$dest" "$url" || {
-      err "Failed to download font: $font"
-      exit 1
+      warn "Failed to download font: $font"
+      warn "You can install it manually or continue without it."
+      # Don't exit - continue with other fonts
+      continue
     }
   done
 
-  log "MesloLGS Nerd Fonts installed. You may need to restart your terminal."
+  log "MesloLGS Nerd Fonts installation complete. You may need to restart your terminal."
 }
 
 install_meslo_fonts_linux() {
@@ -454,22 +501,69 @@ install_meslo_fonts_linux() {
     return 0
   fi
 
-  log "Installing MesloLGS Nerd Fonts (Linux)..."
+  log "Checking MesloLGS Nerd Fonts (Linux)..."
   local font_dir="$HOME/.local/share/fonts"
   mkdir -p "$font_dir"
 
+  # Check if all fonts are already installed
+  local fonts=(
+    "MesloLGS NF Regular.ttf"
+    "MesloLGS NF Bold.ttf"
+    "MesloLGS NF Italic.ttf"
+    "MesloLGS NF Bold Italic.ttf"
+  )
+  
+  local all_present=true
+  for font in "${fonts[@]}"; do
+    if [ ! -f "${font_dir}/${font}" ]; then
+      all_present=false
+      break
+    fi
+  done
+
+  if [ "$all_present" = "true" ]; then
+    log "All MesloLGS NF fonts are already installed. Skipping download."
+    return 0
+  fi
+
+  log "Installing missing MesloLGS Nerd Fonts..."
   base_url="https://github.com/romkatv/powerlevel10k-media/raw/master"
-  for font in "MesloLGS NF Regular.ttf" "MesloLGS NF Bold.ttf" "MesloLGS NF Italic.ttf" "MesloLGS NF Bold Italic.ttf"; do
-    local url="${base_url}/MesloLGS%20NF%20${font#MesloLGS NF }"
+  
+  for font in "${fonts[@]}"; do
     local dest="${font_dir}/${font}"
     if [ -f "$dest" ]; then
-      log "Font already present: $dest"
+      log "Font already present: $font"
       continue
     fi
+    
+    # Fix URL construction for all font variants
+    local font_suffix
+    case "$font" in
+      "MesloLGS NF Regular.ttf")
+        font_suffix="Regular.ttf"
+        ;;
+      "MesloLGS NF Bold.ttf")
+        font_suffix="Bold.ttf"
+        ;;
+      "MesloLGS NF Italic.ttf")
+        font_suffix="Italic.ttf"
+        ;;
+      "MesloLGS NF Bold Italic.ttf")
+        font_suffix="Bold%20Italic.ttf"
+        ;;
+      *)
+        font_suffix="${font#MesloLGS NF }"
+        font_suffix="${font_suffix// /%20}"
+        ;;
+    esac
+    
+    local url="${base_url}/MesloLGS%20NF%20${font_suffix}"
     log "Downloading $font..."
     curl -fsSL -o "$dest" "$url" || {
-      err "Failed to download font: $font"
-      exit 1
+      warn "Failed to download font: $font"
+      warn "You can install it manually or continue without it."
+      # Don't exit - continue with other fonts
+      continue
     }
   done
 
