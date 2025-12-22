@@ -587,10 +587,31 @@ install_powerlevel10k() {
     if [ -d "${HOME}/.powerlevel10k/.git" ]; then
       (cd "${HOME}/.powerlevel10k" && git pull --depth=1 || log "Could not update Powerlevel10k (this is OK)")
     fi
-    return 0
+  else
+    log "Installing Powerlevel10k theme into ~/.powerlevel10k..."
+    git clone --depth=1 https://github.com/romkatv/powerlevel10k.git "${HOME}/.powerlevel10k"
   fi
-  log "Installing Powerlevel10k theme into ~/.powerlevel10k..."
-  git clone --depth=1 https://github.com/romkatv/powerlevel10k.git "${HOME}/.powerlevel10k"
+  
+  # Create symlink in Oh My Zsh custom themes directory so Oh My Zsh can find it
+  local omz_custom_themes="${HOME}/.oh-my-zsh/custom/themes"
+  mkdir -p "$omz_custom_themes"
+  local theme_link="${omz_custom_themes}/powerlevel10k"
+  
+  if [ -L "$theme_link" ]; then
+    # Symlink exists, check if it points to the right place
+    if [ "$(readlink "$theme_link")" != "${HOME}/.powerlevel10k" ]; then
+      log "Updating Powerlevel10k symlink in Oh My Zsh..."
+      rm "$theme_link"
+      ln -s "${HOME}/.powerlevel10k" "$theme_link"
+    else
+      log "Powerlevel10k symlink already correct."
+    fi
+  elif [ ! -e "$theme_link" ]; then
+    log "Creating symlink for Powerlevel10k in Oh My Zsh custom themes..."
+    ln -s "${HOME}/.powerlevel10k" "$theme_link"
+  else
+    warn "Path $theme_link exists but is not a symlink. Powerlevel10k may not work correctly."
+  fi
 }
 
 install_oh_my_zsh() {
