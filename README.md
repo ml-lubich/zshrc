@@ -145,21 +145,97 @@ Powerlevel10k requires **MesloLGS NF** fonts to display icons correctly. The ins
 
 ### VS Code Integrated Terminal
 
-1. Open VS Code Settings (⌘, or Ctrl+,)
-2. Search for "terminal font"
-3. Set `terminal.integrated.fontFamily` to: `"MesloLGS NF"`
-4. Or add to `settings.json`:
+**⚠️ CRITICAL:** VS Code has TWO separate font settings:
+- **Editor Font** (`editor.fontFamily`) - For code editing - ❌ NOT what you need!
+- **Terminal Font** (`terminal.integrated.fontFamily`) - For terminal display - ✅ THIS is what you need!
+
+**Step-by-Step Instructions:**
+
+1. Open VS Code Settings:
+   - Press `⌘,` (Cmd+Comma) on macOS
+   - Or: Code → Settings → Settings
+
+2. Search for the CORRECT setting:
+   - Type: **"terminal font"** (NOT "editor font")
+   - Look for: **"Terminal > Integrated: Font Family"**
+
+3. Set the font:
+   - In the search results, find **"Terminal > Integrated: Font Family"**
+   - Set value to: `MesloLGS NF` (type exactly: `MesloLGS NF`)
+   - **IMPORTANT:** Put `MesloLGS NF` FIRST if you include fallbacks
+   - Example: `MesloLGS NF, monospace` (NOT `monospace, MesloLGS NF`)
+   - Or just: `MesloLGS NF` (recommended)
+   - Make sure it's the TERMINAL setting, not Editor setting!
+
+4. **Restart VS Code terminal:**
+   - Close the terminal panel completely
+   - Reopen: Terminal → New Terminal (or `Ctrl+` `)
+   - Icons should now display correctly!
+
+**Or add directly to `settings.json`:**
+
+1. Open Command Palette (`⌘⇧P`)
+2. Type: "Preferences: Open User Settings (JSON)"
+3. Add this line:
    ```json
    {
      "terminal.integrated.fontFamily": "MesloLGS NF"
    }
    ```
+4. Save and restart VS Code terminal
+
+**Location:** `~/Library/Application Support/Code/User/settings.json` (macOS)
+
+**Troubleshooting:**
+- If you still see blocks:
+  1. **Font order matters:** Put `MesloLGS NF` FIRST (not after `monospace`)
+     - ✅ Correct: `MesloLGS NF` or `MesloLGS NF, monospace`
+     - ❌ Wrong: `monospace, MesloLGS NF`
+  2. **Restart VS Code COMPLETELY:** Quit (Cmd+Q) and reopen, don't just close terminal
+  3. **Font name must be exactly:** `MesloLGS NF` (case-sensitive, with space)
+  4. **Verify font is installed:** Check `~/Library/Fonts/MesloLGS*.ttf` exists
+  5. **Close and reopen terminal panel** after changing font
 
 ### Cursor IDE
 
-1. Open Settings (⌘, or Ctrl+,)
-2. Search for "terminal font"
-3. Set to: `"MesloLGS NF"`
+**⚠️ CRITICAL:** Set the TERMINAL font, not the editor font!
+
+**Step-by-Step Instructions:**
+
+1. Open Settings:
+   - Press `⌘,` (Cmd+Comma) on macOS
+   - Or: Cursor → Settings → Settings
+
+2. Search for the CORRECT setting:
+   - Type: **"terminal font"** (NOT "editor font")
+   - Look for: **"Terminal > Integrated: Font Family"**
+
+3. Set the font:
+   - Find **"Terminal > Integrated: Font Family"**
+   - Set value to: `MesloLGS NF` (exactly as shown)
+   - Make sure it's the TERMINAL setting!
+
+4. **Restart Cursor terminal:**
+   - Close terminal panel completely
+   - Reopen terminal
+   - Icons should now display correctly!
+
+**Or add to `settings.json`:**
+
+1. Open Command Palette (`⌘⇧P`)
+2. Type: "Preferences: Open User Settings (JSON)"
+3. Add:
+   ```json
+   {
+     "terminal.integrated.fontFamily": "MesloLGS NF"
+   }
+   ```
+4. Save and restart Cursor terminal
+
+**Troubleshooting:**
+- Make sure you set `terminal.integrated.fontFamily`, NOT `editor.fontFamily`
+- Font name must be exactly: `MesloLGS NF`
+- Restart Cursor completely if needed
 
 ### Other Editors
 
