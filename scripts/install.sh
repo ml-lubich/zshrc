@@ -555,8 +555,8 @@ configure_p10k_config() {
   # Only update if repo file exists and target doesn't, or if user explicitly wants updates
   if [ -f "$target" ]; then
     # If repo file exists and differs, log but don't overwrite (user may have customized)
-    if [ -f "${REPO_DIR}/p10k.zsh" ]; then
-      if ! cmp -s "${REPO_DIR}/p10k.zsh" "$target" 2>/dev/null; then
+    if [ -f "${REPO_DIR}/config/p10k.zsh" ]; then
+      if ! cmp -s "${REPO_DIR}/config/p10k.zsh" "$target" 2>/dev/null; then
         log "~/.p10k.zsh already exists and differs from repo version."
         log "Keeping existing config. To update, remove ~/.p10k.zsh and run install.sh again."
       else
@@ -568,9 +568,9 @@ configure_p10k_config() {
     return 0
   fi
 
-  if [ -f "${REPO_DIR}/p10k.zsh" ]; then
+  if [ -f "${REPO_DIR}/config/p10k.zsh" ]; then
     log "Copying repo p10k.zsh to ~/.p10k.zsh"
-    cp "${REPO_DIR}/p10k.zsh" "$target"
+    cp "${REPO_DIR}/config/p10k.zsh" "$target"
   else
     log "No p10k.zsh in repo. A default Powerlevel10k config will be generated when you run 'p10k configure'."
   fi

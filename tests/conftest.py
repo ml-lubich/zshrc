@@ -30,7 +30,8 @@ def mock_install_dir(tmp_path):
     
     # Create mock files
     (install_dir / "zshrc").write_text("# Mock zshrc file\n")
-    (install_dir / "p10k.zsh").write_text("# Mock p10k config\n")
+    (install_dir / "config").mkdir(exist_ok=True)
+    (install_dir / "config" / "p10k.zsh").write_text("# Mock p10k config\n")
     (install_dir / "install.sh").write_text("#!/bin/bash\necho 'mock install'\n")
     
     return install_dir

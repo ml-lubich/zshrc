@@ -16,7 +16,7 @@ SCRIPTS_DIR = REPO_DIR / "scripts"
 INSTALL_SCRIPT = SCRIPTS_DIR / "install.sh"
 UNINSTALL_SCRIPT = SCRIPTS_DIR / "uninstall.sh"
 ZSHRC_FILE = REPO_DIR / "zshrc"
-P10K_FILE = REPO_DIR / "p10k.zsh"
+P10K_FILE = REPO_DIR / "config" / "p10k.zsh"
 
 
 class TestScriptSyntax:

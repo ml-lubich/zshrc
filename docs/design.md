@@ -18,7 +18,7 @@
 
 - **File organization**
   - Scripts in `scripts/` directory
-  - Configuration templates (`zshrc`, `p10k.zsh`) in repo root
+  - Configuration templates: `zshrc` in root, `p10k.zsh` in `config/` directory
   - Tests in `tests/` directory
   - Documentation in `docs/` directory
 

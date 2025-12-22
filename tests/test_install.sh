@@ -51,10 +51,10 @@ test_zshrc_exists() {
 }
 
 test_p10k_exists() {
-  if [ -f "$REPO_DIR/p10k.zsh" ]; then
-    test_pass "p10k.zsh file exists"
+  if [ -f "$REPO_DIR/config/p10k.zsh" ]; then
+    test_pass "p10k.zsh file exists in config/"
   else
-    test_fail "p10k.zsh file exists"
+    test_fail "p10k.zsh file exists in config/"
   fi
 }
 
