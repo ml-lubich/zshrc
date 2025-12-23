@@ -517,9 +517,9 @@ alias gs='git status'
 To update your configuration:
 
 ```bash
-cd ~/Desktop/git/zshrc  # or wherever you cloned it
+cd ~/Desktop/git/zshrc   # or wherever you cloned it
 git pull
-./install.sh
+./scripts/install.sh
 ```
 
 The script is idempotent, so running it multiple times is safe. It will:
@@ -532,7 +532,7 @@ The script is idempotent, so running it multiple times is safe. It will:
 To remove components installed by this setup:
 
 ```bash
-./uninstall.sh
+./scripts/uninstall.sh
 ```
 
 The uninstall script will:
