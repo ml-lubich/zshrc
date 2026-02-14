@@ -17,7 +17,7 @@ This repository is intentionally small and well-organized:
 
 ### File Handling
 
-- **`zshrc`**: Always copied to `~/.zshrc` (existing file backed up as `~/.zshrc.pre-mlubich-backup`).
+- **`zshrc`**: Always copied to `~/.zshrc` (existing file backed up as `~/.zshrc.pre-install-backup`).
 - **`config/p10k.zsh`**: Only copied to `~/.p10k.zsh` if it doesn't exist (preserves user customizations).
 - Both files are tracked in git and properly handled by the installation script.
 

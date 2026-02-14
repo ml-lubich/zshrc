@@ -34,7 +34,7 @@ confirm() {
 
 restore_backup() {
   local file="$1"
-  local backup_pattern="${file}.pre-mlubich-backup*"
+  local backup_pattern="${file}.pre-install-backup*"
   
   # Find the most recent backup
   local latest_backup
@@ -273,8 +273,8 @@ main() {
   - System files or other user data
 
 🔄 To restore your previous configuration:
-  - Check for backup files: ~/.zshrc.pre-mlubich-backup-*
-  - Restore manually: cp ~/.zshrc.pre-mlubich-backup-* ~/.zshrc
+  - Check for backup files: ~/.zshrc.pre-install-backup-*
+  - Restore manually: cp ~/.zshrc.pre-install-backup-* ~/.zshrc
 
 📖 To reinstall, run: ./scripts/install.sh
 =====================================================

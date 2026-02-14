@@ -12,7 +12,8 @@
   - No silent fallbacks: failures are logged, and the script exits on critical errors.
 
 - **User safety**
-  - Existing `~/.zshrc` is backed up once as `~/.zshrc.pre-mlubich-backup` before modification.
+  - Existing `~/.zshrc` is backed up once as `~/.zshrc.pre-install-backup` before modification.
+  - On first install, the user's entire existing `~/.zshrc` is copied to `~/.zshrc.local` before overwrite. That file is never overwritten. Our config runs first (adds tools), then sources `.zshrc.local`. User keeps all paths, vars, aliases.
   - `p10k.zsh` from repo is only copied to `~/.p10k.zsh` if it doesn't exist (preserves user customizations).
   - Both `zshrc` and `p10k.zsh` are tracked in git and properly handled by the installation script.
 

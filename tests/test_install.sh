@@ -97,7 +97,7 @@ test_safety_checks() {
   fi
   
   # Check that backups are created
-  if grep -q "BACKUP_SUFFIX\|\.pre-mlubich-backup" "$SCRIPTS_DIR/install.sh"; then
+  if grep -q "BACKUP_SUFFIX\|\.pre-install-backup" "$SCRIPTS_DIR/install.sh"; then
     test_pass "install.sh creates backups"
   else
     test_fail "install.sh doesn't create backups"

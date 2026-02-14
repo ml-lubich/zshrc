@@ -57,9 +57,9 @@ TODO.md
 *.md.bak
 
 # Installation artifacts
-*.pre-mlubich-backup
-.zshrc.pre-mlubich-backup*
-.p10k.zsh.pre-mlubich-backup*
+*.pre-install-backup
+.zshrc.pre-install-backup*
+.p10k.zsh.pre-install-backup*
 
 # Shell scripts (if any are generated)
 *.sh.bak

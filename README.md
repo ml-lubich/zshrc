@@ -49,7 +49,9 @@ A comprehensive, automated setup script for macOS and Linux that installs and co
 - **Xcode Command Line Tools** - Automatic installation on macOS
 - **Cross-platform** - Works on macOS and Linux (Ubuntu, RHEL, Fedora, etc.)
 
-## 🚀 Quick Start
+## Quick Start
+
+See **[QUICKSTART.md](QUICKSTART.md)** for a minimal step-by-step guide.
 
 ### Prerequisites
 
@@ -74,12 +76,12 @@ A comprehensive, automated setup script for macOS and Linux that installs and co
    Note: Scripts are already executable. If you encounter permission issues, run `chmod +x scripts/*.sh`
 
    The script is **idempotent** - you can run it multiple times safely. It will:
-   - Check if components are already installed
-   - Update existing installations when appropriate
-   - Skip unnecessary operations
-   - Never overwrite user customizations unnecessarily
+   - Install tools (Homebrew, fzf, eza, bat, etc.) if missing
+   - Preserve your existing config (paths, vars, aliases) in `~/.zshrc.local`
+   - Add its tools to `~/.zshrc` without replacing your setup
+   - Backup your original `~/.zshrc` before any change
 
-3. **Restart your terminal** (or run `source ~/.zshrc`)
+3. **Restart your terminal** (or run `exec zsh`)
 
 4. **Configure your terminal/editor fonts** (see [Font Setup](#-font-setup) below)
 
@@ -113,7 +115,7 @@ That's it! Your environment is now fully configured.
 
 - **zsh-autosuggestions** - Suggests commands as you type
 - **zsh-syntax-highlighting** - Highlights commands in real-time
-- **Oh My Zsh plugins**: git, z, fzf, autojump, colored-man-pages, web-search, extract
+- **Oh My Zsh plugins**: git, z, fzf, colored-man-pages, web-search, extract
 
 ### Terminal Applications (macOS)
 
@@ -294,7 +296,7 @@ The **`config/p10k.zsh`** file is **only the visual theme configuration**. It co
 - `...` - Go up two directories
 - `ll` - List files with details (using eza)
 - `tree` - Show directory tree (using eza)
-- `j <directory>` - Jump to frequently used directory (autojump)
+- `z <directory>` - Jump to frequently used directory (z plugin)
 
 ### Git Aliases
 
@@ -311,23 +313,23 @@ The **`config/p10k.zsh`** file is **only the visual theme configuration**. It co
 ### Custom Functions
 
 #### `mygit [project]`
-Navigate to a project in `~/Desktop/git/[project]` and open in your default editor.
+Navigate to a project in `~/dev/[project]` and open in your default editor.
 
 **Environment Variables:**
-- `MYGIT_PROJECTS_DIR` - Customize projects directory (default: `~/Desktop/git`)
+- `MYGIT_PROJECTS_DIR` - Customize projects directory (default: `~/dev`)
 - `MYGIT_EDITOR` - Customize editor command (default: `code` for VS Code)
 
 **Usage:**
 ```bash
-mygit my-project    # Opens ~/Desktop/git/my-project in editor
-mygit              # Navigates to ~/Desktop/git
+mygit my-project    # Opens ~/dev/my-project in editor
+mygit              # Navigates to ~/dev
 ```
 
 #### `mygit -n [project]`
 Create a new project directory and open in editor.
 
 ```bash
-mygit -n new-app    # Creates ~/Desktop/git/new-app and opens in editor
+mygit -n new-app    # Creates ~/dev/new-app and opens in editor
 ```
 
 **Example customization:**
@@ -454,12 +456,22 @@ export INSTALL_NVM="true"
 export SET_DEFAULT_SHELL="true"
 ```
 
+### How install works (step by step)
+
+1. **Backup** - Your existing `~/.zshrc` is copied to `~/.zshrc.pre-install-backup` (if not already backed up).
+2. **Preserve** - If `~/.zshrc.local` does not exist, your entire current `~/.zshrc` is copied there. Your paths, variables, aliases, and tool configs are kept as-is.
+3. **Install tools** - Homebrew packages (fzf, eza, bat, etc.) are installed if missing.
+4. **Write zshrc** - The repo `zshrc` is written to `~/.zshrc`. It contains Oh My Zsh, Powerlevel10k, fzf, eza, bat, lazygit, and our aliases.
+5. **Source your config** - At the end of `~/.zshrc`, `~/.zshrc.local` is sourced. Your config runs after ours, so your settings can override ours. Nothing is broken.
+6. **Print backup path** - When done, the install prints the backup path and restore command so you know exactly where to restore from if anything breaks.
+
+**Result:** You get our tools (Powerlevel10k, fzf, eza, bat, thefuck, lazygit, mygit, etc.) plus your existing env vars and paths. Order: our tools first, then yours.
+
 ### Configuration Files Location
 
-- **`~/.zshrc`** - Main Zsh configuration file (copied from repo `zshrc`)
-  - Contains: Oh My Zsh setup, plugins, aliases, functions, tool configurations
-  - This is the **core shell configuration** - all your shell behavior lives here
-  - Includes: `mygit` function, git aliases, fzf setup, NVM, modern tool aliases, etc.
+- **`~/.zshrc`** - Our tools and config (Oh My Zsh, Powerlevel10k, fzf, eza, mygit, etc.). Overwritten on each install.
+
+- **`~/.zshrc.local`** - Your config (paths, vars, aliases). Never overwritten. Sourced at the end of `~/.zshrc`. On first install, this is a copy of your original `~/.zshrc`.
   
 - **`~/.p10k.zsh`** - Powerlevel10k theme configuration (copied from repo `config/p10k.zsh`)
   - Contains: Visual appearance of your prompt (colors, segments, layout)
@@ -517,7 +529,7 @@ alias gs='git status'
 To update your configuration:
 
 ```bash
-cd ~/Desktop/git/zshrc   # or wherever you cloned it
+cd ~/dev/zshrc   # or wherever you cloned it
 git pull
 ./scripts/install.sh
 ```
@@ -618,7 +630,7 @@ The uninstall script will:
 
 If something goes wrong, restore your backup:
 ```bash
-cp ~/.zshrc.pre-mlubich-backup ~/.zshrc
+cp ~/.zshrc.pre-install-backup ~/.zshrc
 source ~/.zshrc
 ```
 

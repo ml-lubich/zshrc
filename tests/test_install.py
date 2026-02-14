@@ -103,7 +103,7 @@ class TestSafetyChecks:
     def test_backup_mechanism(self):
         """Verify backup mechanism exists"""
         content = INSTALL_SCRIPT.read_text()
-        assert ".pre-mlubich-backup" in content or "BACKUP_EXISTING" in content, \
+        assert ".pre-install-backup" in content or "BACKUP_EXISTING" in content, \
             "install.sh should create backups"
     
     def test_no_system_file_modification(self):
@@ -292,7 +292,7 @@ class TestIdempotency:
     def test_backup_only_once(self):
         """Verify backup is only created once"""
         content = INSTALL_SCRIPT.read_text()
-        assert ".pre-mlubich-backup" in content, \
+        assert ".pre-install-backup" in content, \
             "Should use backup naming convention"
         # Check that it doesn't create backup if one exists
         assert "! -f" in content or "not exist" in content.lower(), \

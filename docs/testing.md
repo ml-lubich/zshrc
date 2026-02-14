@@ -57,7 +57,7 @@ Coverage is reported over the **Python test code** (shell scripts are treated as
 - `install.sh`:
   - Uses `set -euo pipefail`.
   - Contains a backup mechanism:
-    - Backs up `~/.zshrc` / `~/.p10k.zsh` to `*.pre-mlubich-backup` before overwriting.
+    - Backs up `~/.zshrc` / `~/.p10k.zsh` to `*.pre-install-backup` before overwriting.
     - Does not recreate the backup if it already exists.
   - Only modifies user‑space paths under `$HOME`.
   - Does **not** contain dangerous operations on `/etc` or similar system directories (any such patterns must appear only in comments).

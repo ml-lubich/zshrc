@@ -300,11 +300,11 @@ Or edit `~/.p10k.zsh` directly.
 
 ```bash
 # Restore .zshrc
-cp ~/.zshrc.pre-mlubich-backup ~/.zshrc
+cp ~/.zshrc.pre-install-backup ~/.zshrc
 source ~/.zshrc
 
 # Restore .p10k.zsh (if backed up)
-cp ~/.p10k.zsh.pre-mlubich-backup ~/.p10k.zsh
+cp ~/.p10k.zsh.pre-install-backup ~/.p10k.zsh
 ```
 
 ## Uninstalling

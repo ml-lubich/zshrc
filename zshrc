@@ -10,7 +10,7 @@ fi
 # Set Homebrew path (supports both Apple Silicon and Intel Macs, plus Linux)
 if [ -d "/opt/homebrew/bin" ]; then
   export PATH="/opt/homebrew/bin:$PATH"
-elif [ -d "/usr/local/Homebrew/bin" ]; then
+elif [ -d "/usr/local/bin" ]; then
   export PATH="/usr/local/bin:$PATH"
 elif [ -d "$HOME/.linuxbrew/bin" ]; then
   export PATH="$HOME/.linuxbrew/bin:$PATH"
@@ -28,12 +28,11 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 # Added 'web-search' (allows typing 'google something' in terminal)
 # Added 'extract' (unzip/untar anything with command 'x filename')
 plugins=(
-  git 
-  z 
-  fzf 
-  autojump 
-  colored-man-pages 
-  web-search 
+  git
+  z
+  fzf
+  colored-man-pages
+  web-search
   extract
 )
 
@@ -78,16 +77,21 @@ fi
 
 # Use ripgrep for content search
 if command -v rg >/dev/null 2>&1; then
-  export FZF_DEFAULT_OPTS='--height 50% --layout=reverse --border --preview "bat --style=numbers --color=always --line-range :500 {}"'
-  
-  # Search for content in files using ripgrep
-  # Usage: Press Ctrl+R to search command history, or type: rg "search term" | fzf
+  if command -v bat >/dev/null 2>&1; then
+    export FZF_DEFAULT_OPTS='--height 50% --layout=reverse --border --preview "bat --style=numbers --color=always --line-range :500 {}"'
+  else
+    export FZF_DEFAULT_OPTS='--height 50% --layout=reverse --border'
+  fi
   export FZF_CTRL_R_OPTS='--preview "echo {}" --preview-window down:3:hidden:wrap --bind "?:toggle-preview"'
 fi
 
 # FZF aliases for common workflows
-# Search file names
-alias ff='fzf --preview "bat --style=numbers --color=always --line-range :500 {}"'
+# Search file names (bat preview only when bat is installed)
+if command -v bat >/dev/null 2>&1; then
+  alias ff='fzf --preview "bat --style=numbers --color=always --line-range :500 {}"'
+else
+  alias ff='fzf'
+fi
 
 # Search file content with ripgrep + fzf
 # Usage: rgg "search term"
@@ -96,9 +100,15 @@ rgg() {
     echo "Usage: rgg <search-term>"
     return 1
   fi
+  local preview_cmd
+  if command -v bat >/dev/null 2>&1; then
+    preview_cmd='bat --style=numbers --color=always --highlight-line {2} {1} --line-range $(( {2}-30 )):$(( {2}+30 ))'
+  else
+    preview_cmd='sed -n "{2}p" {1}'
+  fi
   rg --line-number --no-heading --smart-case "$1" . | \
     fzf --delimiter : \
-        --preview 'bat --style=numbers --color=always --highlight-line {2} {1} --line-range $(( {2}-30 )):$(( {2}+30 ))' \
+        --preview "$preview_cmd" \
         --preview-window 'up,60%,border-bottom,+{2}+3/3,~3'
 }
 
@@ -133,7 +143,6 @@ zstyle ':completion:*' menu select
 # Navigation
 alias ..='cd ..'
 alias ...='cd ../..'
-alias ll='ls -lah'
 
 # Git Aliases
 alias gs='git status'
@@ -147,8 +156,8 @@ alias gpush='git push origin $(git_current_branch)'
 
 # Custom Functions
 # mygit: Generalizable project navigation function
-# Set MYGIT_PROJECTS_DIR to customize the projects directory (default: ~/Desktop/git)
-export MYGIT_PROJECTS_DIR="${MYGIT_PROJECTS_DIR:-$HOME/Desktop/git}"
+# Set MYGIT_PROJECTS_DIR to customize the projects directory (default: ~/dev)
+export MYGIT_PROJECTS_DIR="${MYGIT_PROJECTS_DIR:-$HOME/dev}"
 export MYGIT_EDITOR="${MYGIT_EDITOR:-code}"
 
 mygit() {
@@ -164,17 +173,17 @@ mygit() {
     shift # Remove the -n so $1 becomes the project name
     
     if [ -z "$1" ]; then
-      echo "❌ Error: Please provide a name (e.g., mygit -n new-app)"
+      echo "Error: Please provide a name (e.g., mygit -n new-app)"
       return 1
     fi
 
     local project_path="$MYGIT_PROJECTS_DIR/$1"
-    echo "🆕 Creating new project: $1"
+    echo "Creating new project: $1"
     mkdir -p "$project_path"
     cd "$project_path"
-    echo "🚀 Opening in IDE..."
+    echo "Opening in IDE..."
     $MYGIT_EDITOR . 2>/dev/null || {
-      echo "⚠️  Editor '$MYGIT_EDITOR' not found. Set MYGIT_EDITOR to your preferred editor."
+      echo "Editor '$MYGIT_EDITOR' not found. Set MYGIT_EDITOR to your preferred editor."
     }
     return
   fi
@@ -184,13 +193,13 @@ mygit() {
   
   if [ -d "$project_path" ]; then
     cd "$project_path"
-    echo "🚀 Opening in IDE..."
+    echo "Opening in IDE..."
     $MYGIT_EDITOR . 2>/dev/null || {
-      echo "⚠️  Editor '$MYGIT_EDITOR' not found. Set MYGIT_EDITOR to your preferred editor."
+      echo "Editor '$MYGIT_EDITOR' not found. Set MYGIT_EDITOR to your preferred editor."
     }
   else
-    echo "❌ Project '$1' not found."
-    echo "👉 Did you mean to create it? Use: mygit -n $1"
+    echo "Project '$1' not found."
+    echo "Did you mean to create it? Use: mygit -n $1"
   fi
 }
 
@@ -236,22 +245,31 @@ POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS+=(virtualenv)
 # ==============================================================================
 
 # 1. 'eza' (Better ls)
-# -l: long list, -a: all files, --icons: show icons, --git: show git status
-alias ls='eza --icons --git'
-alias ll='eza -l -a --icons --git --group-directories-first'
-alias tree='eza --tree --icons'
+if command -v eza >/dev/null 2>&1; then
+  alias ls='eza --icons --git'
+  alias ll='eza -l -a --icons --git --group-directories-first'
+  alias tree='eza --tree --icons'
+else
+  alias ll='ls -lah'
+fi
 
 # 2. 'bat' (Better cat)
-# Uses syntax highlighting for files
-alias cat='bat'
-# Set bat as the default man page viewer (colored man pages on steroids)
-export MANPAGER="sh -c 'col -bx | bat -l man -p'"
+if command -v bat >/dev/null 2>&1; then
+  alias cat='bat'
+  export MANPAGER="sh -c 'col -bx | bat -l man -p'"
+fi
 
 # 3. 'thefuck' (Typo corrector)
-# If you type a command wrong, just type 'fuck' (or 'f') to fix it
-eval $(thefuck --alias)
-alias f='fuck'
+if command -v thefuck >/dev/null 2>&1; then
+  eval "$(thefuck --alias)"
+  alias f='fuck'
+fi
 
 # 4. 'lazygit' (Git UI)
-alias lg='lazygit'
+if command -v lazygit >/dev/null 2>&1; then
+  alias lg='lazygit'
+fi
+
+# User-local overrides (never overwritten by install)
+[ -f ~/.zshrc.local ] && source ~/.zshrc.local
 
