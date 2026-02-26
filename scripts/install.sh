@@ -629,9 +629,10 @@ install_oh_my_zsh() {
   RUNZSH=no KEEP_ZSHRC=yes sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 }
 
-# Preserve user's ENTIRE existing config into .zshrc.local (never overwritten).
-# Our zshrc runs first (adds tools), then sources .local.
-# Result: user keeps all paths, vars, aliases; we add Powerlevel10k, fzf, eza, etc.
+# Preserve user's existing config into .zshrc.local (never overwritten).
+# Bare "source" / ". " lines are wrapped with [ -f ... ] && guards so that
+# uninstalling a third-party tool (which deletes its completion file) won't
+# leave a broken source line that errors on every shell start.
 preserve_user_config() {
   local source_file="$1"
   local dest="$2"
@@ -639,8 +640,23 @@ preserve_user_config() {
   if [ ! -s "$source_file" ]; then
     return 1
   fi
-  log "Preserving your config to ~/.zshrc.local (paths, vars, aliases - unchanged)"
-  cp "$source_file" "$dest"
+  log "Preserving your config to ~/.zshrc.local (guarding bare source lines)"
+  {
+    cat <<'HEADER'
+# ~/.zshrc.local — Migrated from your previous ~/.zshrc
+# Review and remove lines you no longer need (e.g. uninstalled tools).
+# Bare "source" lines have been guarded so missing files won't cause errors.
+
+HEADER
+    # Guard bare source/dot-source lines that aren't already protected.
+    # Skips: comments, lines with && or ||, process substitution <(...)
+    sed -E \
+      -e '/^[[:space:]]*#/b' \
+      -e '/&&/b' \
+      -e '/\|\|/b' \
+      -e 's/^([[:space:]]*)(source|\.) +([^<].*)$/\1[ -f \3 ] \&\& \2 \3/' \
+      "$source_file"
+  } > "$dest"
   return 0
 }
 

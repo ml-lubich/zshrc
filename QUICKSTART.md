@@ -43,4 +43,4 @@ p10k configure
 | `lg`        | LazyGit                        |
 | `ls` / `ll` | eza (when installed)           |
 
-**Your config:** Install copies your existing `~/.zshrc` to `~/.zshrc.local` on first run. Our tools go in `~/.zshrc`, yours stay in `.zshrc.local` (sourced at end). Nothing is replaced; we add tools on top.
+**Your config:** Install copies your existing `~/.zshrc` to `~/.zshrc.local` on first run (bare `source` lines are guarded so uninstalled tools won't break your shell). Our tools go in `~/.zshrc`, yours stay in `.zshrc.local` (sourced at end). Nothing is replaced; we add tools on top.

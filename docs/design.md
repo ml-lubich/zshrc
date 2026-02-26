@@ -13,7 +13,7 @@
 
 - **User safety**
   - Existing `~/.zshrc` is backed up once as `~/.zshrc.pre-install-backup` before modification.
-  - On first install, the user's entire existing `~/.zshrc` is copied to `~/.zshrc.local` before overwrite. That file is never overwritten. Our config runs first (adds tools), then sources `.zshrc.local`. User keeps all paths, vars, aliases.
+  - On first install, the user's existing `~/.zshrc` is copied to `~/.zshrc.local` before overwrite, with bare `source`/`. ` lines wrapped in `[ -f ... ] &&` guards. This means uninstalling a third-party tool (which deletes its completion/init files) won't leave broken references that error on every shell start. That file is never overwritten. Our config runs first (adds tools), then sources `.zshrc.local`. User keeps all paths, vars, aliases.
   - `p10k.zsh` from repo is only copied to `~/.p10k.zsh` if it doesn't exist (preserves user customizations).
   - Both `zshrc` and `p10k.zsh` are tracked in git and properly handled by the installation script.
 

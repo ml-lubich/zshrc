@@ -219,15 +219,8 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
 
-# b) JAVA (Optional - only if Zulu 8 is installed)
-# Uncomment and adjust path if you have Java installed
-# export JAVA_HOME=/Library/Java/JavaVirtualMachines/zulu-8.jdk/Contents/Home
-# export PATH="$JAVA_HOME/bin:$PATH"
-
-# c) Custom & Third Party Tools
-# Prepend these so they take precedence over system tools
-# Add your custom paths here if needed
-# export PATH="$HOME/.antigravity/antigravity/bin:$PATH"
+# b) Custom & Third Party Tools
+# Add machine-specific paths in ~/.zshrc.local instead of here.
 export PATH="$HOME/.local/bin:$PATH"
 
 # ==============================================================================
