@@ -55,6 +55,7 @@ flowchart LR
 - [License](#license)
 - [Author](#author)
 - [🗺️ Repository map](#️-repository-map)
+- [📊 Code composition](#-code-composition)
 
 ## Install pipeline (sequence)
 
@@ -277,4 +278,18 @@ mindmap
     files
       README.md
       requirements.txt
+```
+
+
+## 📊 Code composition
+
+File-type breakdown of source under this repo (skips `.git`, `node_modules`, build caches, lockfiles).
+
+```mermaid
+pie showData title File-type composition of zshrc (21 files)
+    "Markdown" : 8
+    "Shell" : 5
+    "Python" : 5
+    "Other" : 2
+    "Text" : 1
 ```
