@@ -74,7 +74,7 @@ sequenceDiagram
     SH->>P10K: clone theme + write ~/.p10k.zsh
     SH->>FS: link repo zshrc → ~/.zshrc
     SH->>FS: install MesloLGS NF font
-    SH-->>U: done; restart shell
+    SH-->>U: done, restart shell
 ```
 
 ## Shell startup order
