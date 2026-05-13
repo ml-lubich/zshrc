@@ -1,8 +1,57 @@
 # Zsh Configuration with Powerlevel10k
 
-One-command setup for a complete macOS/Linux terminal: Oh My Zsh, Powerlevel10k, fzf, eza, bat, lazygit, thefuck, and more.
+> One-command setup for a complete macOS/Linux terminal: Oh My Zsh,
+> Powerlevel10k, fzf, eza, bat, lazygit, thefuck, and more.
 
 **Your existing `~/.zshrc` is preserved** — the installer backs it up and migrates your config to `~/.zshrc.local` (sourced at the end), so nothing is lost.
+
+```mermaid
+flowchart LR
+    USER[("👤 you<br/>fresh shell")]
+    INSTALL{{"🚀 scripts/install.sh"}}
+    BACKUP["📦 backup<br/>.zshrc → .zshrc.pre-install-backup"]
+    BREW["🍺 Homebrew + tools<br/>fzf · eza · bat · ..."]
+    OMZ["🎨 Oh My Zsh +<br/>Powerlevel10k"]
+    NVM["🟢 NVM + Node LTS"]
+    FONTS["🔤 MesloLGS NF"]
+    NEWRC[/"⚙ ~/.zshrc<br/>(repo zshrc)"/]
+    LOCAL[/"🧩 ~/.zshrc.local<br/>(your config)"/]
+    P10K[/"🎀 ~/.p10k.zsh"/]
+
+    USER --> INSTALL
+    INSTALL --> BACKUP --> LOCAL
+    INSTALL --> BREW
+    INSTALL --> OMZ --> P10K
+    INSTALL --> NVM
+    INSTALL --> FONTS
+    INSTALL --> NEWRC
+    NEWRC -. sources at end .-> LOCAL
+
+    classDef io fill:#0e1116,stroke:#2f81f7,stroke-width:1.5px,color:#e6edf3;
+    classDef tool fill:#161b22,stroke:#3fb950,stroke-width:1.5px,color:#e6edf3;
+    classDef brain fill:#161b22,stroke:#d29922,stroke-width:1.5px,color:#e6edf3;
+    classDef out fill:#0e1116,stroke:#a371f7,stroke-width:1.5px,color:#e6edf3;
+    class USER io;
+    class BREW,OMZ,NVM,FONTS,BACKUP tool;
+    class INSTALL brain;
+    class NEWRC,LOCAL,P10K out;
+```
+
+## Table of contents
+
+- [Quick Start](#quick-start)
+- [What Gets Installed](#what-gets-installed)
+- [How It Works](#how-it-works)
+- [Font Setup](#font-setup)
+- [Commands & Aliases](#commands--aliases)
+- [Configuration](#configuration)
+- [Updating](#updating)
+- [Uninstalling](#uninstalling)
+- [Testing](#testing)
+- [File Structure](#file-structure)
+- [Troubleshooting](#troubleshooting)
+- [License](#license)
+- [Author](#author)
 
 ## Quick Start
 
