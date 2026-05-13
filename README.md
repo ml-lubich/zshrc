@@ -54,6 +54,7 @@ flowchart LR
 - [Troubleshooting](#troubleshooting)
 - [License](#license)
 - [Author](#author)
+- [🗺️ Repository map](#️-repository-map)
 
 ## Install pipeline (sequence)
 
@@ -244,3 +245,36 @@ Personal use. Fork and customize for your own needs.
 ## Author
 
 **Misha Lubich** — [@ml-lubich](https://github.com/ml-lubich)
+
+
+## 🗺️ Repository map
+
+Top-level layout of `zshrc` rendered as a Mermaid mindmap (auto-generated from the on-disk tree).
+
+```mermaid
+mindmap
+  root((zshrc))
+    config/
+      p10k.zsh
+    docs/
+      INSTALLATION_GUIDE.md
+      api.md
+      architecture.md
+      design.md
+      requirements.md
+      testing.md
+    scripts/
+      config.sh
+      install.sh
+      uninstall.sh
+    tests/
+      __init__.py
+      conftest.py
+      test_install.py
+      test_install.sh
+      test_install_script.py
+      test_zshrc_config.py
+    files
+      README.md
+      requirements.txt
+```
