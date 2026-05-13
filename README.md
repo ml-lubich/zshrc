@@ -40,6 +40,8 @@ flowchart LR
 ## Table of contents
 
 - [Quick Start](#quick-start)
+- [Install pipeline (sequence)](#install-pipeline-sequence)
+- [Shell startup order](#shell-startup-order)
 - [What Gets Installed](#what-gets-installed)
 - [How It Works](#how-it-works)
 - [Font Setup](#font-setup)
@@ -52,6 +54,42 @@ flowchart LR
 - [Troubleshooting](#troubleshooting)
 - [License](#license)
 - [Author](#author)
+
+## Install pipeline (sequence)
+
+```mermaid
+sequenceDiagram
+    participant U as user
+    participant SH as scripts/install.sh
+    participant FS as ~/
+    participant BR as Homebrew
+    participant OMZ as Oh My Zsh
+    participant P10K as Powerlevel10k
+
+    U->>SH: ./scripts/install.sh
+    SH->>FS: cp ~/.zshrc → .zshrc.pre-install-backup
+    SH->>FS: write old config to ~/.zshrc.local
+    SH->>BR: install fzf, eza, bat, lazygit, ...
+    SH->>OMZ: install
+    SH->>P10K: clone theme + write ~/.p10k.zsh
+    SH->>FS: link repo zshrc → ~/.zshrc
+    SH->>FS: install MesloLGS NF font
+    SH-->>U: done; restart shell
+```
+
+## Shell startup order
+
+```mermaid
+flowchart LR
+    A([new zsh])
+    B["~/.zshrc (repo)"]
+    C["OMZ + plugins"]
+    D["Powerlevel10k theme"]
+    E["~/.p10k.zsh prompt cfg"]
+    F["~/.zshrc.local<br/>(your overrides)"]
+    Z([prompt ready])
+    A --> B --> C --> D --> E --> F --> Z
+```
 
 ## Quick Start
 
